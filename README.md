@@ -163,7 +163,7 @@ Las contribuciones son bienvenidas. Por favor, lea [CONTRIBUTING.md](CONTRIBUTIN
 
   <p>
     <a href="https://github.com/lopezDev">
-      <img src="https://img.shields.io/github/followers/tu-usuario?label=follow&style=social" alt="GitHub"/>
+      <img src="https://img.shields.io/github/followers/lopezsDev?label=follow&style=social" alt="GitHub"/>
     </a>
   </p>
 </div>
