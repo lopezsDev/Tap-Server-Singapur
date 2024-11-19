@@ -28,7 +28,7 @@ const Header = () => {
                 onMouseLeave={handleMouseLeave}
               >
                 <li>
-                  <Link href="/Menu.tsx">Plataforma Menu</Link>
+                  <Link href="./paginas/Menu">Plataforma Menu</Link>
                 </li>
                 <li>
                   <Link href="/menu">Organizar por categorías</Link>

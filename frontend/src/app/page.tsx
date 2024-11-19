@@ -43,7 +43,7 @@ export default function Home() {
             <div style={styles.textContent}>
               <h2 style={styles.title}>Pedidos</h2>
               <p style={styles.description}>Consulta, realiza, modifica los pedidos de tu negocio</p>
-              <button style={styles.button}><Link href="../paginas/Menu">Read More</Link></button>
+              <button style={styles.button}><Link href="./paginas/Pedidos">Read More</Link></button>
             </div>
           </div>
 
@@ -53,7 +53,7 @@ export default function Home() {
             <div style={styles.textContent}>
               <h2 style={styles.title}>Reportes</h2>
               <p style={styles.description}>Añade, cambia o crea un reporte.</p>
-              <button style={styles.button}><Link href="../paginas/Menu">Read More</Link></button>
+              <button style={styles.button}><Link href="./paginas/Reportes">Read More</Link></button>
             </div>
           </div>
 

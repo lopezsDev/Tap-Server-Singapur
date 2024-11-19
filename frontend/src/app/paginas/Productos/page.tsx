@@ -1,4 +1,5 @@
 "use client";
+import Header from '@/app/components/Header';
 import React, { ChangeEvent, useState } from 'react';
 
 interface Product {
@@ -30,7 +31,10 @@ const ProductosPage: React.FC = () => {
   };
 
   return (
+    <div>
+      <Header/>
     <div style={styles.container}>
+
       <h1>Gestión de Productos</h1>
       <div style={styles.inputContainer}>
         <input
@@ -71,6 +75,7 @@ const ProductosPage: React.FC = () => {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 };
