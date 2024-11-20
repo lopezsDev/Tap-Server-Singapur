@@ -12,7 +12,7 @@ const Header = () => {
   return (
     <header style={styles.header}>
       <div style={styles.overlay}>
-        <h1 style={styles.title}>Tap & Serve Singapur</h1>
+        <h1 style={styles.title}><Link href="./app">Tap & Serve Singapur</Link></h1>
       </div>
       <nav style={styles.nav}>
         <ul style={styles.menu}>

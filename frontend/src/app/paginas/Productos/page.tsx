@@ -1,141 +1,155 @@
 "use client";
-import Header from '@/app/components/Header';
-import React, { ChangeEvent, useState } from 'react';
+
+import Header from "@/app/components/Header";
+import Productos from "@/app/components/Productos";
+import React, { ChangeEvent, useState } from "react";
 
 // Productos
 interface Product {
   id: number;
   name: string;
-  price: string;
+  description: string;
+  initialQuantity: number;
+  price: number;
+  category: string;
 }
 
 const ProductosPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [newProductName, setNewProductName] = useState<string>("");
-  const [newProductPrice, setNewProductPrice] = useState<string>("");
+  const [newProduct, setNewProduct] = useState<Partial<Product>>({
+    name: "",
+    description: "",
+    initialQuantity: 0,
+    price: 0,
+    category: "",
+  });
+  const [showPopup, setShowPopup] = useState<boolean>(false); // Estado para la ventana emergente
+
+  // Función para manejar los cambios en los campos
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewProduct({ ...newProduct, [name]: value });
+  };
 
   // Función para agregar un nuevo producto
   const addProduct = (): void => {
-    if (newProductName.trim() && newProductPrice.trim()) {
+    if (
+      newProduct.name?.trim() &&
+      newProduct.description?.trim() &&
+      newProduct.initialQuantity &&
+      newProduct.price &&
+      newProduct.category?.trim()
+    ) {
       setProducts([
         ...products,
-        { id: Date.now(), name: newProductName, price: newProductPrice },
+        { id: Date.now(), ...newProduct } as Product,
       ]);
-      setNewProductName("");
-      setNewProductPrice("");
+      setNewProduct({
+        name: "",
+        description: "",
+        initialQuantity: 0,
+        price: 0,
+        category: "",
+      });
+      setShowPopup(true); // Mostrar ventana emergente
     }
   };
-
-  // Función para eliminar un producto
-  const deleteProduct = (id: number): void => {
-    setProducts(products.filter((product) => product.id !== id));
-  };
-
   return (
     <div>
-      <Header/>
-    <div style={styles.container}>
-
-      <h1>Gestión de Productos</h1>
-      <div style={styles.inputContainer}>
-        <input
-          type="text"
-          placeholder="Nombre del producto"
-          value={newProductName}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setNewProductName(e.target.value)}
-          style={styles.input}
-        />
-        <input
-          type="number"
-          placeholder="Precio del producto"
-          value={newProductPrice}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setNewProductPrice(e.target.value)}
-          style={styles.input}
-        />
-        <button onClick={addProduct} style={styles.addButton}>Agregar</button>
-      </div>
-      <table style={styles.table}>
-        <thead>
-          <tr>
-            <th style={styles.headerCell}>Producto</th>
-            <th style={styles.headerCell}>Precio</th>
-            <th style={styles.headerCell}>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((product) => (
-            <tr key={product.id} style={styles.row}>
-              <td style={styles.cell}>{product.name}</td>
-              <td style={styles.cell}>${product.price}</td>
-              <td style={styles.cell}>
-                <button onClick={() => deleteProduct(product.id)} style={styles.deleteButton}>
-                  Eliminar
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+      <Header />
+      <div>
+      <Productos
+  styles={styles}
+  newProduct={newProduct}
+  handleInputChange={handleInputChange}
+  addProduct={addProduct}
+  showPopup={showPopup}
+  setShowPopup={setShowPopup}
+/>;</div>
     </div>
   );
 };
 
 const styles: { [key: string]: React.CSSProperties } = {
-  container: {
-    padding: '1rem',
-    backgroundColor: '#f9f9f9',
-    borderRadius: '8px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    maxWidth: '600px',
-    margin: '0 auto',
-    textAlign: 'center',
+  pageContainer: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    backgroundColor: "#222",
+    minHeight: "100vh",
+    color: "#fff",
   },
-  inputContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    marginBottom: '1rem',
+  container: {
+    backgroundColor: "#333",
+    borderRadius: "8px",
+    padding: "2rem",
+    width: "90%",
+    maxWidth: "400px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+  },
+  title: {
+    textAlign: "center",
+    fontSize: "1.5rem",
+    marginBottom: "1rem",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1rem",
+  },
+  label: {
+    display: "flex",
+    flexDirection: "column",
+    fontSize: "0.9rem",
+    fontWeight: "bold",
   },
   input: {
-    padding: '0.5rem',
-    fontSize: '1rem',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-    marginRight: '0.5rem',
+    padding: "0.5rem",
+    borderRadius: "4px",
+    border: "1px solid #444",
+    backgroundColor: "#555",
+    color: "#fff",
+    marginTop: "0.5rem",
   },
   addButton: {
-    padding: '0.5rem 1rem',
-    fontSize: '1rem',
-    backgroundColor: '#28a745',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
+    padding: "0.75rem",
+    backgroundColor: "#28a745",
+    color: "#fff",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+    fontWeight: "bold",
+    fontSize: "1rem",
   },
-  table: {
-    width: '100%',
-    borderCollapse: 'collapse',
+  popupOverlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000,
   },
-  headerCell: {
-    padding: '0.75rem',
-    backgroundColor: '#333',
-    color: '#fff',
-    fontWeight: 'bold',
+  popup: {
+    backgroundColor: "#333",
+    padding: "2rem",
+    borderRadius: "8px",
+    textAlign: "center",
+    color: "#fff",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)",
   },
-  row: {
-    borderBottom: '1px solid #ddd',
-  },
-  cell: {
-    padding: '0.75rem',
-  },
-  deleteButton: {
-    padding: '0.25rem 0.5rem',
-    fontSize: '0.9rem',
-    color: '#fff',
-    backgroundColor: '#dc3545',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
+  popupButton: {
+    marginTop: "1rem",
+    padding: "0.5rem 1rem",
+    backgroundColor: "#28a745",
+    color: "#fff",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+    fontWeight: "bold",
   },
 };
 
