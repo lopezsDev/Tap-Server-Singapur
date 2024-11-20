@@ -2,6 +2,7 @@
 import Header from '@/app/components/Header';
 import React, { ChangeEvent, useState } from 'react';
 
+// Productos
 interface Product {
   id: number;
   name: string;
