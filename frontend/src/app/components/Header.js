@@ -20,7 +20,7 @@ const Header = () => {
             onMouseEnter={() => handleMouseEnter('menu')}
             onMouseLeave={handleMouseLeave}
           >
-            🍴 Menu
+            <Link href="./paginas/Menu">🍴 Menu</Link>
             {visibleMenu === 'menu' && (
               <ul
                 style={styles.dropdown}
@@ -40,17 +40,17 @@ const Header = () => {
             onMouseEnter={() => handleMouseEnter('categorias')}
             onMouseLeave={handleMouseLeave}
           >
-            🍃 Categorías
+            <Link href="./paginas/Categorias">🍃 Categorías</Link>
             {visibleMenu === 'categorias' && (
               <ul
                 style={styles.dropdown}
                 onMouseEnter={() => handleMouseEnter('categorias')}
                 onMouseLeave={handleMouseLeave}
               >
-                <li><Link href="../../pages/Categorias">Agregar</Link></li>
-                <li><Link href="../../pages/Categorias">Consultar</Link></li>
-                <li><Link href="../../pages/Categorias">Modificar</Link></li>
-                <li><Link href="../../pages/Categorias">Descontinuar</Link></li>
+                <li><Link href="./paginas/Categorias">Agregar</Link></li>
+                <li><Link href="./paginas/Categorias">Consultar</Link></li>
+                <li><Link href="./paginas/Categorias">Modificar</Link></li>
+                <li><Link href="./paginas/Categorias">Descontinuar</Link></li>
               </ul>
             )}
           </li>
@@ -58,19 +58,19 @@ const Header = () => {
             onMouseEnter={() => handleMouseEnter('productos')}
             onMouseLeave={handleMouseLeave}
           >
-            🍸 Productos
+            <Link href="./paginas/Productos">🍸 Productos</Link>
             {visibleMenu === 'productos' && (
               <ul
                 style={styles.dropdown}
                 onMouseEnter={() => handleMouseEnter('productos')}
                 onMouseLeave={handleMouseLeave}
               >
-                <li><Link href="../../pages/productos">Agregar</Link></li>
-                <li><Link href="../../pages/productos">Consultar</Link></li>
-                <li><Link href="../../pages/productos">Modificar</Link></li>
-                <li><Link href="../../pages/productos">Descontinuar</Link></li>
-                <li><Link href="../../pages/productos">Salidas de inventario</Link></li>
-                <li><Link href="../../pages/productos">Calculo de inventario</Link></li>
+                <li><Link href="./paginas/productos">Agregar</Link></li>
+                <li><Link href="./paginas/productos">Consultar</Link></li>
+                <li><Link href="./paginas/productos">Modificar</Link></li>
+                <li><Link href="./paginas/productos">Descontinuar</Link></li>
+                <li><Link href="./paginas/productos">Salidas de inventario</Link></li>
+                <li><Link href="./paginas/productos">Calculo de inventario</Link></li>
               </ul>
             )}
           </li>
@@ -78,19 +78,19 @@ const Header = () => {
             onMouseEnter={() => handleMouseEnter('pedidos')}
             onMouseLeave={handleMouseLeave}
           >
-            📦 Pedidos
+            <Link href="./paginas/pedidos">📦 Pedidos</Link>
             {visibleMenu === 'pedidos' && (
               <ul
                 style={styles.dropdown}
                 onMouseEnter={() => handleMouseEnter('pedidos')}
                 onMouseLeave={handleMouseLeave}
               >
-                <li><Link href="../../pages/pedidos">Registrar</Link></li>
-                <li><Link href="../../pages/pedidos">Confirmar</Link></li>
-                <li><Link href="../../pages/pedidos">Modificar</Link></li>
-                <li><Link href="../../pages/pedidos">Eliminar</Link></li>
-                <li><Link href="../../pages/pedidos">Consultar</Link></li>
-                <li><Link href="../../pages/pedidos">Asignar Mesa</Link></li>
+                <li><Link href="./paginas/pedidos">Registrar</Link></li>
+                <li><Link href="./paginas/pedidos">Confirmar</Link></li>
+                <li><Link href="./paginas/pedidos">Modificar</Link></li>
+                <li><Link href="./paginas/pedidos">Eliminar</Link></li>
+                <li><Link href="./paginas/pedidos">Consultar</Link></li>
+                <li><Link href="./paginas/pedidos">Asignar Mesa</Link></li>
               </ul>
             )}
           </li>
@@ -105,10 +105,10 @@ const Header = () => {
                 onMouseEnter={() => handleMouseEnter('reportes')}
                 onMouseLeave={handleMouseLeave}
               >
-                <li><Link href="../../pages/reportes">Reporte Pedido</Link></li>
-                <li><Link href="../../pages/reportes">Reporte Ventas</Link></li>
-                <li><Link href="../../pages/reportes">Reporte inventario</Link></li>
-                <li><Link href="../../pages/reportes">Cierre inventario</Link></li>
+                <li><Link href="./paginas/reportes">Reporte Pedido</Link></li>
+                <li><Link href="./paginas/reportes">Reporte Ventas</Link></li>
+                <li><Link href="./paginas/reportes">Reporte inventario</Link></li>
+                <li><Link href="./paginas/reportes">Cierre inventario</Link></li>
               </ul>
             )}
           </li>
