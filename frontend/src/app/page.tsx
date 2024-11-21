@@ -33,7 +33,7 @@ export default function Home() {
             <div style={styles.textContent}>
               <h2 style={styles.title}>Productos</h2>
               <p style={styles.description}>Añade, cambia o gestiona los productos.</p>
-              <button style={styles.button}><Link href="./paginas/Productos">Read More</Link></button>
+              <button style={styles.button}><Link href="./paginas/Productos">Ir a la pagina</Link></button>
             </div>
           </div>
 
@@ -43,7 +43,7 @@ export default function Home() {
             <div style={styles.textContent}>
               <h2 style={styles.title}>Pedidos</h2>
               <p style={styles.description}>Consulta, realiza, modifica los pedidos de tu negocio</p>
-              <button style={styles.button}><Link href="./paginas/Pedidos">Read More</Link></button>
+              <button style={styles.button}><Link href="./paginas/Pedidos">Ir a la pagina</Link></button>
             </div>
           </div>
 
@@ -53,7 +53,7 @@ export default function Home() {
             <div style={styles.textContent}>
               <h2 style={styles.title}>Reportes</h2>
               <p style={styles.description}>Añade, cambia o crea un reporte.</p>
-              <button style={styles.button}><Link href="./paginas/Reportes">Read More</Link></button>
+              <button style={styles.button}><Link href="./paginas/Reportes">Ir a la pagina</Link></button>
             </div>
           </div>
 
@@ -77,7 +77,7 @@ const styles: { [key: string]: CSSProperties } = {
     alignItems: 'center',
     minHeight: '100vh',
     padding: '2rem',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#000',
   },
   grid: {
     display: 'grid',
@@ -90,14 +90,14 @@ const styles: { [key: string]: CSSProperties } = {
     display: 'flex',
     alignItems: 'center',
     padding: '2rem',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#333',
     borderRadius: '8px',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   },
   imagePlaceholder: {
     width: '200px',
     height: '200px',
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#222',
     borderRadius: '8px',
     marginRight: '2rem',
   },
@@ -126,7 +126,7 @@ const styles: { [key: string]: CSSProperties } = {
     padding: '0.75rem 1.5rem',
     fontSize: '1rem',
     color: '#ffffff',
-    backgroundColor: '#333',
+    backgroundColor: '#222',
     border: 'none',
     borderRadius: '4px',
     cursor: 'pointer',
