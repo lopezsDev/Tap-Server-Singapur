@@ -21,7 +21,6 @@ const Productos: React.FC = () => {
     initialQuantity: 0,
     price: 0,
     category: "",
-    stock: 0,
   });
   const [activeOption, setActiveOption] = useState<string>("Agregar");
   const [popupMessage, setPopupMessage] = useState<string>("");
@@ -108,53 +107,46 @@ const Productos: React.FC = () => {
     setShowPopup(true);
   };
 
-  // Función para descontinuar un producto
-  const discontinueProduct = () => {
-    if (!newProduct.name) {
-      setPopupMessage("Debes ingresar un nombre para descontinuar.");
-      setShowPopup(true);
-      return;
-    }
-
-    const productExists = products.some(
-      (product) => product.name === newProduct.name
+  // Función para cálculo de inventario
+  const calculateInventory = () => {
+    const totalInventory = products.reduce(
+      (total, product) => total + product.stock * product.price,
+      0
     );
-
-    if (!productExists) {
-      setPopupMessage("El producto no existe.");
-      setShowPopup(true);
-      return;
-    }
-
-    const updatedProducts = products.filter(
-      (product) => product.name !== newProduct.name
-    );
-    setProducts(updatedProducts);
-    setPopupMessage("Producto descontinuado con éxito.");
+    setPopupMessage(`El valor total del inventario es: $${totalInventory.toFixed(2)}`);
     setShowPopup(true);
   };
 
-  // Función para consultar un producto
-  const consultProduct = () => {
-    if (!newProduct.name) {
-      setPopupMessage("Debes ingresar un nombre para consultar.");
+  // Función para salidas de inventario
+  const removeFromInventory = () => {
+    if (!newProduct.name || !newProduct.initialQuantity) {
+      setPopupMessage("Debes ingresar el nombre del producto y la cantidad.");
       setShowPopup(true);
       return;
     }
 
-    const product = products.find(
+    const productIndex = products.findIndex(
       (product) => product.name === newProduct.name
     );
 
-    if (!product) {
+    if (productIndex === -1) {
       setPopupMessage("El producto no existe.");
       setShowPopup(true);
       return;
     }
 
-    setPopupMessage(
-      `Producto encontrado: ${product.name}, Descripción: ${product.description}, Stock: ${product.stock}`
-    );
+    const updatedProducts = [...products];
+    const product = updatedProducts[productIndex];
+
+    if (product.stock < newProduct.initialQuantity!) {
+      setPopupMessage("La cantidad solicitada excede el stock disponible.");
+      setShowPopup(true);
+      return;
+    }
+
+    product.stock -= newProduct.initialQuantity!;
+    setProducts(updatedProducts);
+    setPopupMessage("Salida de inventario registrada con éxito.");
     setShowPopup(true);
   };
 
@@ -174,7 +166,7 @@ const Productos: React.FC = () => {
               style={styles.input}
             />
           </label>
-          {["Agregar", "Modificar"].includes(activeOption) && (
+          {["Agregar", "Modificar", "Salidas de inventario"].includes(activeOption) && (
             <>
               <label style={styles.label}>
                 Descripción
@@ -187,7 +179,7 @@ const Productos: React.FC = () => {
                 />
               </label>
               <label style={styles.label}>
-                Cantidad inicial
+                Cantidad
                 <input
                   type="number"
                   name="initialQuantity"
@@ -225,9 +217,9 @@ const Productos: React.FC = () => {
                 ? addProduct
                 : activeOption === "Modificar"
                 ? modifyProduct
-                : activeOption === "Descontinuar"
-                ? discontinueProduct
-                : consultProduct
+                : activeOption === "Cálculo de inventario"
+                ? calculateInventory
+                : removeFromInventory
             }
             style={styles.addButton}
           >
