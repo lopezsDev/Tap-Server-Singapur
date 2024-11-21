@@ -20,7 +20,7 @@ const Header = () => {
             onMouseEnter={() => handleMouseEnter('menu')}
             onMouseLeave={handleMouseLeave}
           >
-            🍴 Menu
+            <Link href="./paginas/Menu">🍴 Menu</Link>
             {visibleMenu === 'menu' && (
               <ul
                 style={styles.dropdown}
@@ -40,7 +40,7 @@ const Header = () => {
             onMouseEnter={() => handleMouseEnter('categorias')}
             onMouseLeave={handleMouseLeave}
           >
-            🍃 Categorías
+            <Link href="./paginas/Categorias">🍃 Categorías</Link>
             {visibleMenu === 'categorias' && (
               <ul
                 style={styles.dropdown}
@@ -58,7 +58,7 @@ const Header = () => {
             onMouseEnter={() => handleMouseEnter('productos')}
             onMouseLeave={handleMouseLeave}
           >
-            🍸 Productos
+            <Link href="./paginas/Productos">🍸 Productos</Link>
             {visibleMenu === 'productos' && (
               <ul
                 style={styles.dropdown}
@@ -78,7 +78,7 @@ const Header = () => {
             onMouseEnter={() => handleMouseEnter('pedidos')}
             onMouseLeave={handleMouseLeave}
           >
-            📦 Pedidos
+            <Link href="./paginas/pedidos">📦 Pedidos</Link>
             {visibleMenu === 'pedidos' && (
               <ul
                 style={styles.dropdown}
