@@ -2,6 +2,7 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
+import imgSinga from '../img/Singapur.png';
 
 const Header = () => {
   const [visibleMenu, setVisibleMenu] = useState(null);
@@ -10,9 +11,11 @@ const Header = () => {
   const handleMouseLeave = () => setVisibleMenu(null);
 
   return (
-    <header style={styles.header}>
+    <header style={{ ...styles.header, backgroundImage: imgSinga }}>
       <div style={styles.overlay}>
-        <h1 style={styles.title}><Link href="./app">Tap & Serve Singapur</Link></h1>
+        <h1 style={styles.title}>
+          <Link href="localhost:3000">Tap & Serve Singapur</Link>
+        </h1>
       </div>
       <nav style={styles.nav}>
         <ul style={styles.menu}>
@@ -20,7 +23,7 @@ const Header = () => {
             onMouseEnter={() => handleMouseEnter('menu')}
             onMouseLeave={handleMouseLeave}
           >
-            <Link href="./paginas/Menu">🍴 Menu</Link>
+            <Link href="../../paginas/Menu">🍴 Menu</Link>
             {visibleMenu === 'menu' && (
               <ul
                 style={styles.dropdown}
@@ -28,7 +31,7 @@ const Header = () => {
                 onMouseLeave={handleMouseLeave}
               >
                 <li>
-                  <Link href="./paginas/Menu">Plataforma Menu</Link>
+                  <Link href="../../paginas/Menu">Plataforma Menu</Link>
                 </li>
                 <li>
                   <Link href="/menu">Organizar por categorías</Link>
@@ -40,17 +43,17 @@ const Header = () => {
             onMouseEnter={() => handleMouseEnter('categorias')}
             onMouseLeave={handleMouseLeave}
           >
-            <Link href="./paginas/Categorias">🍃 Categorías</Link>
+            <Link href="../../paginas/Categorias">🍃 Categorías</Link>
             {visibleMenu === 'categorias' && (
               <ul
                 style={styles.dropdown}
                 onMouseEnter={() => handleMouseEnter('categorias')}
                 onMouseLeave={handleMouseLeave}
               >
-                <li><Link href="./paginas/Categorias">Agregar</Link></li>
-                <li><Link href="./paginas/Categorias">Consultar</Link></li>
-                <li><Link href="./paginas/Categorias">Modificar</Link></li>
-                <li><Link href="./paginas/Categorias">Descontinuar</Link></li>
+                <li><Link href="../../paginas/Categorias">Agregar</Link></li>
+                <li><Link href="../../paginas/Categorias">Consultar</Link></li>
+                <li><Link href="../../paginas/Categorias">Modificar</Link></li>
+                <li><Link href="../../paginas/Categorias">Descontinuar</Link></li>
               </ul>
             )}
           </li>
@@ -58,19 +61,19 @@ const Header = () => {
             onMouseEnter={() => handleMouseEnter('productos')}
             onMouseLeave={handleMouseLeave}
           >
-            <Link href="./paginas/Productos">🍸 Productos</Link>
+            <Link href="../../paginas/Productos">🍸 Productos</Link>
             {visibleMenu === 'productos' && (
               <ul
                 style={styles.dropdown}
                 onMouseEnter={() => handleMouseEnter('productos')}
                 onMouseLeave={handleMouseLeave}
               >
-                <li><Link href="./paginas/productos">Agregar</Link></li>
-                <li><Link href="./paginas/productos">Consultar</Link></li>
-                <li><Link href="./paginas/productos">Modificar</Link></li>
-                <li><Link href="./paginas/productos">Descontinuar</Link></li>
-                <li><Link href="./paginas/productos">Salidas de inventario</Link></li>
-                <li><Link href="./paginas/productos">Calculo de inventario</Link></li>
+                <li><Link href="../../paginas/productos">Agregar</Link></li>
+                <li><Link href="../../paginas/productos">Consultar</Link></li>
+                <li><Link href="../../paginas/productos">Modificar</Link></li>
+                <li><Link href="../../paginas/productos">Descontinuar</Link></li>
+                <li><Link href="../../paginas/productos">Salidas de inventario</Link></li>
+                <li><Link href="../../paginas/productos">Calculo de inventario</Link></li>
               </ul>
             )}
           </li>
@@ -78,19 +81,19 @@ const Header = () => {
             onMouseEnter={() => handleMouseEnter('pedidos')}
             onMouseLeave={handleMouseLeave}
           >
-            <Link href="./paginas/pedidos">📦 Pedidos</Link>
+            <Link href="../../paginas/Pedidos">📦 Pedidos</Link>
             {visibleMenu === 'pedidos' && (
               <ul
                 style={styles.dropdown}
                 onMouseEnter={() => handleMouseEnter('pedidos')}
                 onMouseLeave={handleMouseLeave}
               >
-                <li><Link href="./paginas/pedidos">Registrar</Link></li>
-                <li><Link href="./paginas/pedidos">Confirmar</Link></li>
-                <li><Link href="./paginas/pedidos">Modificar</Link></li>
-                <li><Link href="./paginas/pedidos">Eliminar</Link></li>
-                <li><Link href="./paginas/pedidos">Consultar</Link></li>
-                <li><Link href="./paginas/pedidos">Asignar Mesa</Link></li>
+                <li><Link href="../../paginas/pedidos">Registrar</Link></li>
+                <li><Link href="../../paginas/pedidos">Confirmar</Link></li>
+                <li><Link href="../../paginas/pedidos">Modificar</Link></li>
+                <li><Link href="../../paginas/pedidos">Eliminar</Link></li>
+                <li><Link href="../../paginas/pedidos">Consultar</Link></li>
+                <li><Link href="../../paginas/pedidos">Asignar Mesa</Link></li>
               </ul>
             )}
           </li>
@@ -105,10 +108,10 @@ const Header = () => {
                 onMouseEnter={() => handleMouseEnter('reportes')}
                 onMouseLeave={handleMouseLeave}
               >
-                <li><Link href="./paginas/reportes">Reporte Pedido</Link></li>
-                <li><Link href="./paginas/reportes">Reporte Ventas</Link></li>
-                <li><Link href="./paginas/reportes">Reporte inventario</Link></li>
-                <li><Link href="./paginas/reportes">Cierre inventario</Link></li>
+                <li><Link href="../../paginas/reportes">Reporte Pedido</Link></li>
+                <li><Link href="../../paginas/reportes">Reporte Ventas</Link></li>
+                <li><Link href="../../paginas/reportes">Reporte inventario</Link></li>
+                <li><Link href="../../paginas/reportes">Cierre inventario</Link></li>
               </ul>
             )}
           </li>
@@ -122,11 +125,14 @@ const styles = {
   header: {
     position: 'relative',
     textAlign: 'center',
+    height: '300px',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
   },
   overlay: {
     position: 'relative',
     padding: '2rem 0',
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    backgroundColor: 'rgba(0, 0, 0, 1)', // Da opacidad al fondo
   },
   title: {
     color: '#FFFFFF',
@@ -159,4 +165,3 @@ const styles = {
 };
 
 export default Header;
-
