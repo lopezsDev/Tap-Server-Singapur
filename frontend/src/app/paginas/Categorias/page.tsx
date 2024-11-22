@@ -1,11 +1,12 @@
 'use client';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import Header from '../../components/Header';
 
 interface Category {
+  id?: number;
   name: string;
   description: string;
-  unit: string;
+  unidadMedida: string;
 }
 
 const Categorias: React.FC = () => {
@@ -13,63 +14,124 @@ const Categorias: React.FC = () => {
   const [newCategory, setNewCategory] = useState<Category>({
     name: "",
     description: "",
-    unit: "",
+    unidadMedida: "",
   });
   const [activeOption, setActiveOption] = useState<string>("Agregar");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+  const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
-  // Manejar cambios en el formulario
+  const API_URL = 'http://192.168.0.17:8080/api/categories';
+
+  // Fetch categories on load
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(API_URL);
+      if (response.ok) {
+        const data = await response.json();
+        setCategories(data);
+        showAlert('success', 'Categorías cargadas correctamente.');
+      } else {
+        showAlert('error', 'Error al obtener categorías.');
+      }
+    } catch (error) {
+      showAlert('error', 'No se pudo conectar con el servidor.');
+      console.error("Error de red:", error);
+    }
+  };
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     setNewCategory({ ...newCategory, [name]: value });
   };
 
-  // Agregar categoría
-  const addCategory = (): void => {
-    if (!newCategory.name || !newCategory.description || !newCategory.unit) {
-      alert("Por favor, completa todos los campos.");
-      return;
-    }
-
-    if (categories.some((category) => category.name === newCategory.name)) {
-      alert("¡El nombre de la categoría ya existe!");
-      return;
-    }
-
-    setCategories([...categories, { ...newCategory }]);
-    setNewCategory({ name: "", description: "", unit: "" });
-    alert("¡Categoría agregada con éxito!");
+  const showAlert = (type: 'success' | 'error', message: string) => {
+    setAlert({ type, message });
+    setTimeout(() => setAlert(null), 3000);
   };
 
-  // Modificar categoría
-  const modifyCategory = (): void => {
-    if (!selectedCategory || !newCategory.name) {
-      alert("Selecciona una categoría para modificar.");
+  const addCategory = async (): Promise<void> => {
+    if (!newCategory.name || !newCategory.description || !newCategory.unidadMedida) {
+      showAlert('error', 'Por favor, completa todos los campos.');
       return;
     }
 
-    const updatedCategories = categories.map((category) =>
-      category.name === selectedCategory ? { ...newCategory } : category
-    );
-    setCategories(updatedCategories);
-    setSelectedCategory(null);
-    setNewCategory({ name: "", description: "", unit: "" });
-    alert("Categoría modificada con éxito.");
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newCategory),
+      });
+
+      if (response.ok) {
+        fetchCategories();
+        setNewCategory({ name: "", description: "", unidadMedida: "" });
+        showAlert('success', '¡Categoría agregada con éxito!');
+      } else {
+        const errorData = await response.json();
+        console.error("Detalles del error:", errorData);
+        showAlert('error', 'Error al agregar la categoría.');
+      }
+    } catch (error) {
+      showAlert('error', 'Error de red. Verifica la conexión con el servidor.');
+      console.error("Error de red:", error);
+    }
   };
 
-  // Descontinuar categoría
-  const discontinueCategory = (): void => {
-    if (!selectedCategory) {
-      alert("Selecciona una categoría para descontinuar.");
+  const modifyCategory = async (): Promise<void> => {
+    if (!selectedCategoryId) {
+      showAlert('error', 'Selecciona una categoría para modificar.');
       return;
     }
 
-    setCategories(categories.filter((category) => category.name !== selectedCategory));
-    setSelectedCategory(null);
-    alert("Categoría descontinuada con éxito.");
+    try {
+      const response = await fetch(`${API_URL}/${selectedCategoryId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newCategory),
+      });
+
+      if (response.ok) {
+        fetchCategories();
+        setSelectedCategoryId(null);
+        setNewCategory({ name: "", description: "", unidadMedida: "" });
+        showAlert('success', 'Categoría modificada con éxito.');
+      } else {
+        showAlert('error', 'Error al modificar la categoría.');
+      }
+    } catch (error) {
+      showAlert('error', 'Error de red. Verifica la conexión con el servidor.');
+      console.error("Error de red:", error);
+    }
   };
 
-  // Renderizar contenido basado en la opción activa
+  const discontinueCategory = async (): Promise<void> => {
+    if (!selectedCategoryId) {
+      showAlert('error', 'Selecciona una categoría para descontinuar.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/${selectedCategoryId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        fetchCategories();
+        setSelectedCategoryId(null);
+        showAlert('success', 'Categoría descontinuada con éxito.');
+      } else {
+        showAlert('error', 'Error al descontinuar la categoría.');
+      }
+    } catch (error) {
+      showAlert('error', 'Error de red. Verifica la conexión con el servidor.');
+      console.error("Error de red:", error);
+    }
+  };
+
   const renderContent = () => {
     if (activeOption === "Consultar") {
       return (
@@ -83,15 +145,15 @@ const Categorias: React.FC = () => {
                 <tr>
                   <th style={styles.headerCell}>Nombre</th>
                   <th style={styles.headerCell}>Descripción</th>
-                  <th style={styles.headerCell}>Unidad</th>
+                  <th style={styles.headerCell}>Unidad de Medida</th>
                 </tr>
               </thead>
               <tbody>
-                {categories.map((category, index) => (
-                  <tr key={index}>
+                {categories.map((category) => (
+                  <tr key={category.id} onClick={() => setSelectedCategoryId(category.id!)}>
                     <td style={styles.cell}>{category.name}</td>
                     <td style={styles.cell}>{category.description}</td>
-                    <td style={styles.cell}>{category.unit}</td>
+                    <td style={styles.cell}>{category.unidadMedida}</td>
                   </tr>
                 ))}
               </tbody>
@@ -129,8 +191,8 @@ const Categorias: React.FC = () => {
             Unidad de Medida
             <input
               type="text"
-              name="unit"
-              value={newCategory.unit}
+              name="unidadMedida"
+              value={newCategory.unidadMedida}
               onChange={handleInputChange}
               style={styles.input}
             />
@@ -156,6 +218,19 @@ const Categorias: React.FC = () => {
   return (
     <div>
       <Header />
+      {alert && (
+        <div
+          style={{
+            backgroundColor: alert.type === 'success' ? 'green' : 'red',
+            color: 'white',
+            padding: '1rem',
+            textAlign: 'center',
+            marginBottom: '1rem',
+          }}
+        >
+          {alert.message}
+        </div>
+      )}
       <div style={styles.pageContainer}>
         <div style={styles.sidebar}>
           {["Agregar", "Consultar", "Modificar", "Descontinuar"].map(
@@ -180,6 +255,7 @@ const Categorias: React.FC = () => {
 };
 
 const styles: { [key: string]: React.CSSProperties } = {
+  // Estilos originales
   pageContainer: {
     display: 'flex',
     width: '100%',
@@ -228,6 +304,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderRadius: '4px',
     border: '1px solid #ddd',
     marginBottom: '1rem',
+    color:'#fffff',
   },
   addButton: {
     padding: '0.75rem',

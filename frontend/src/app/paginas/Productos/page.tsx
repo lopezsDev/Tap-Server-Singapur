@@ -1,16 +1,17 @@
 "use client";
 
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import Header from "../../components/Header";
 
 interface Product {
   id: number;
   name: string;
   description: string;
-  initialQuantity: number;
   price: number;
-  category: string;
-  stock: number;
+  estado: boolean;
+  cantidadCritica: number;
+  cantidadDisponible: number;
+  categoria: string;
 }
 
 const Productos: React.FC = () => {
@@ -18,13 +19,39 @@ const Productos: React.FC = () => {
   const [newProduct, setNewProduct] = useState<Partial<Product>>({
     name: "",
     description: "",
-    initialQuantity: 0,
     price: 0,
-    category: "",
+    estado: true,
+    cantidadCritica: 0,
+    cantidadDisponible: 0,
+    categoria: "",
   });
   const [activeOption, setActiveOption] = useState<string>("Agregar");
   const [popupMessage, setPopupMessage] = useState<string>("");
   const [showPopup, setShowPopup] = useState<boolean>(false);
+
+  const API_URL = "http://192.168.0.17:8080/api/products";
+
+  useEffect(() => {
+    if (activeOption === "Consultar") {
+      fetchProducts();
+    }
+  }, [activeOption]);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch(API_URL);
+      if (response.ok) {
+        const data = await response.json();
+        setProducts(data);
+      } else {
+        setPopupMessage(`Error al obtener productos: ${response.status}`);
+        setShowPopup(true);
+      }
+    } catch (error) {
+      setPopupMessage(`Error de red: ${error}`);
+      setShowPopup(true);
+    }
+  };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -36,122 +63,129 @@ const Productos: React.FC = () => {
     setPopupMessage("");
   };
 
-  // Función para agregar un producto
-  const addProduct = () => {
-    if (
-      !newProduct.name ||
-      !newProduct.description ||
-      !newProduct.initialQuantity ||
-      !newProduct.price ||
-      !newProduct.category
-    ) {
-      setPopupMessage("Todos los campos son obligatorios.");
-      setShowPopup(true);
-      return;
-    }
+  const addProduct = async () => {
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newProduct),
+      });
 
-    const productExists = products.some(
-      (product) => product.name === newProduct.name
-    );
-    if (productExists) {
-      setPopupMessage("El producto ya existe.");
+      if (response.ok) {
+        setPopupMessage("Producto agregado con éxito.");
+        setShowPopup(true);
+        fetchProducts();
+        setNewProduct({
+          name: "",
+          description: "",
+          price: 0,
+          estado: true,
+          cantidadCritica: 0,
+          cantidadDisponible: 0,
+          categoria: "",
+        });
+      } else {
+        setPopupMessage(`Error al agregar producto: ${response.status}`);
+        setShowPopup(true);
+      }
+    } catch (error) {
+      setPopupMessage(`Error de red: ${error}`);
       setShowPopup(true);
-      return;
     }
-
-    setProducts([
-      ...products,
-      {
-        id: Date.now(),
-        ...newProduct,
-        stock: newProduct.initialQuantity || 0,
-      } as Product,
-    ]);
-    setPopupMessage("Producto agregado con éxito.");
-    setShowPopup(true);
-    setNewProduct({
-      name: "",
-      description: "",
-      initialQuantity: 0,
-      price: 0,
-      category: "",
-    });
   };
 
-  // Función para modificar un producto
-  const modifyProduct = () => {
-    if (!newProduct.name) {
-      setPopupMessage("Debes ingresar un nombre para modificar.");
+  const modifyProduct = async () => {
+    if (!newProduct.id) {
+      setPopupMessage("Selecciona un producto para modificar.");
       setShowPopup(true);
       return;
     }
 
-    const productIndex = products.findIndex(
-      (product) => product.name === newProduct.name
-    );
+    try {
+      const response = await fetch(`${API_URL}/${newProduct.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newProduct),
+      });
 
-    if (productIndex === -1) {
-      setPopupMessage("El producto no existe.");
+      if (response.ok) {
+        setPopupMessage("Producto modificado con éxito.");
+        setShowPopup(true);
+        fetchProducts();
+      } else {
+        setPopupMessage(`Error al modificar producto: ${response.status}`);
+        setShowPopup(true);
+      }
+    } catch (error) {
+      setPopupMessage(`Error de red: ${error}`);
       setShowPopup(true);
-      return;
     }
-
-    const updatedProducts = [...products];
-    updatedProducts[productIndex] = {
-      ...updatedProducts[productIndex],
-      ...newProduct,
-    } as Product;
-
-    setProducts(updatedProducts);
-    setPopupMessage("Producto modificado con éxito.");
-    setShowPopup(true);
   };
 
-  // Función para cálculo de inventario
-  const calculateInventory = () => {
-    const totalInventory = products.reduce(
-      (total, product) => total + product.stock * product.price,
-      0
-    );
-    setPopupMessage(`El valor total del inventario es: $${totalInventory.toFixed(2)}`);
-    setShowPopup(true);
+  const deleteProduct = async (id: number) => {
+    try {
+      const response = await fetch(`${API_URL}/${id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        setPopupMessage("Producto eliminado con éxito.");
+        setShowPopup(true);
+        fetchProducts();
+      } else {
+        setPopupMessage(`Error al eliminar producto: ${response.status}`);
+        setShowPopup(true);
+      }
+    } catch (error) {
+      setPopupMessage(`Error de red: ${error}`);
+      setShowPopup(true);
+    }
   };
 
-  // Función para salidas de inventario
-  const removeFromInventory = () => {
-    if (!newProduct.name || !newProduct.initialQuantity) {
-      setPopupMessage("Debes ingresar el nombre del producto y la cantidad.");
-      setShowPopup(true);
-      return;
-    }
-
-    const productIndex = products.findIndex(
-      (product) => product.name === newProduct.name
-    );
-
-    if (productIndex === -1) {
-      setPopupMessage("El producto no existe.");
-      setShowPopup(true);
-      return;
-    }
-
-    const updatedProducts = [...products];
-    const product = updatedProducts[productIndex];
-
-    if (product.stock < newProduct.initialQuantity!) {
-      setPopupMessage("La cantidad solicitada excede el stock disponible.");
-      setShowPopup(true);
-      return;
-    }
-
-    product.stock -= newProduct.initialQuantity!;
-    setProducts(updatedProducts);
-    setPopupMessage("Salida de inventario registrada con éxito.");
-    setShowPopup(true);
-  };
-
-  // Renderizado dinámico según la opción activa
   const renderContent = () => {
+    if (activeOption === "Consultar") {
+      return (
+        <div>
+          <h2>Consultar Productos</h2>
+          {products.length === 0 ? (
+            <p>No hay productos disponibles.</p>
+          ) : (
+            <table style={styles.table}>
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Descripción</th>
+                  <th>Precio</th>
+                  <th>Categoría</th>
+                  <th>Disponible</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map((product) => (
+                  <tr key={product.id}>
+                    <td>{product.name}</td>
+                    <td>{product.description}</td>
+                    <td>${product.price}</td>
+                    <td>{product.categoria}</td>
+                    <td>{product.cantidadDisponible}</td>
+                    <td>
+                      <button
+                        style={styles.deleteButton}
+                        onClick={() => deleteProduct(product.id)}
+                      >
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      );
+    }
+
     return (
       <div>
         <h2>{activeOption} Producto</h2>
@@ -166,61 +200,49 @@ const Productos: React.FC = () => {
               style={styles.input}
             />
           </label>
-          {["Agregar", "Modificar", "Salidas de inventario"].includes(activeOption) && (
-            <>
-              <label style={styles.label}>
-                Descripción
-                <input
-                  type="text"
-                  name="description"
-                  value={newProduct.description || ""}
-                  onChange={handleInputChange}
-                  style={styles.input}
-                />
-              </label>
-              <label style={styles.label}>
-                Cantidad
-                <input
-                  type="number"
-                  name="initialQuantity"
-                  value={newProduct.initialQuantity || ""}
-                  onChange={handleInputChange}
-                  style={styles.input}
-                />
-              </label>
-              <label style={styles.label}>
-                Precio
-                <input
-                  type="number"
-                  name="price"
-                  value={newProduct.price || ""}
-                  onChange={handleInputChange}
-                  style={styles.input}
-                />
-              </label>
-              <label style={styles.label}>
-                Categoría
-                <input
-                  type="text"
-                  name="category"
-                  value={newProduct.category || ""}
-                  onChange={handleInputChange}
-                  style={styles.input}
-                />
-              </label>
-            </>
-          )}
+          <label style={styles.label}>
+            Descripción
+            <input
+              type="text"
+              name="description"
+              value={newProduct.description || ""}
+              onChange={handleInputChange}
+              style={styles.input}
+            />
+          </label>
+          <label style={styles.label}>
+            Precio
+            <input
+              type="number"
+              name="price"
+              value={newProduct.price || ""}
+              onChange={handleInputChange}
+              style={styles.input}
+            />
+          </label>
+          <label style={styles.label}>
+            Categoría
+            <input
+              type="text"
+              name="categoria"
+              value={newProduct.categoria || ""}
+              onChange={handleInputChange}
+              style={styles.input}
+            />
+          </label>
+          <label style={styles.label}>
+            Cantidad Disponible
+            <input
+              type="number"
+              name="cantidadDisponible"
+              value={newProduct.cantidadDisponible || ""}
+              onChange={handleInputChange}
+              style={styles.input}
+            />
+          </label>
           <button
             type="button"
-            onClick={
-              activeOption === "Agregar"
-                ? addProduct
-                : activeOption === "Modificar"
-                ? modifyProduct
-                : activeOption === "Cálculo de inventario"
-                ? calculateInventory
-                : removeFromInventory
-            }
+            onClick={addProduct}
             style={styles.addButton}
           >
             {activeOption}
@@ -235,14 +257,7 @@ const Productos: React.FC = () => {
       <Header />
       <div style={styles.pageContainer}>
         <div style={styles.sidebar}>
-          {[
-            "Agregar",
-            "Consultar",
-            "Modificar",
-            "Descontinuar",
-            "Salidas de inventario",
-            "Cálculo de inventario",
-          ].map((option) => (
+          {["Agregar", "Consultar", "Modificar", "Eliminar"].map((option) => (
             <button
               key={option}
               onClick={() => setActiveOption(option)}
@@ -272,6 +287,7 @@ const Productos: React.FC = () => {
     </div>
   );
 };
+
 
 const styles: { [key: string]: React.CSSProperties } = {
   pageContainer: {
