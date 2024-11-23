@@ -29,6 +29,13 @@ public class ProductModel {
     @Column(name = "cantidad_disponible")
     private int cantidadDisponible;
 
-    private String categoria;
+    @Column(name = "cantidad_retirada")
+    private Integer cantidadRetirada;
 
+    @Column(name = "motivo_retiro")
+    private String motivoRetiro;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "category_id", nullable = false)
+    private CategoryModel category;
 }

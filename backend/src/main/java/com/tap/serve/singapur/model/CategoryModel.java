@@ -1,9 +1,12 @@
 package com.tap.serve.singapur.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -22,4 +25,8 @@ public class CategoryModel {
 
     @Column(name = "unidad_medida")
     private String unidadMedida;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "category", cascade = CascadeType.PERSIST)
+    private List<ProductModel> products;
 }

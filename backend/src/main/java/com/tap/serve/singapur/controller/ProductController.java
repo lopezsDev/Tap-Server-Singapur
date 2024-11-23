@@ -1,12 +1,16 @@
 package com.tap.serve.singapur.controller;
 
+import com.tap.serve.singapur.config.ApiResp;
+import com.tap.serve.singapur.dto.ProductDTO;
+import com.tap.serve.singapur.dto.ProductOutDTO;
 import com.tap.serve.singapur.model.ProductModel;
 import com.tap.serve.singapur.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +32,7 @@ public class ProductController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list")
     })
     @GetMapping
-    public ResponseEntity<List<ProductModel>> getAllProducts() {
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
         return ResponseEntity.ok(productService.findAll());
     }
 
@@ -39,7 +43,7 @@ public class ProductController {
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<ProductModel> getProductById(@PathVariable long id) {
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable long id) {
         return ResponseEntity.ok(productService.findById(id));
     }
 
@@ -49,9 +53,13 @@ public class ProductController {
                     content = @Content(schema = @Schema(implementation = ProductModel.class)))
     })
     @PostMapping
-    public ResponseEntity<ProductModel> createProduct(@RequestBody ProductModel productModel) {
-        ProductModel savedProduct = productService.save(productModel);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
+        try {
+            ProductDTO savedProduct = productService.save(productDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
+        } catch (EntityNotFoundException | IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 
     @Operation(summary = "Update an existing product", description = "Update the details of an existing product.")
@@ -60,10 +68,19 @@ public class ProductController {
                     content = @Content(schema = @Schema(implementation = ProductModel.class))),
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
-    @PutMapping("/{id}")
-    public ResponseEntity<ProductModel> updateProduct(@PathVariable long id, @RequestBody ProductModel productModel) {
-        productModel.setId(id);
-        return ResponseEntity.ok(productService.save(productModel));
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable long id, @RequestBody ProductDTO productDTO) {
+
+        ProductDTO updatedDTO = new ProductDTO(
+                id,
+                productDTO.name(),
+                productDTO.description(),
+                productDTO.price(),
+                productDTO.estado(),
+                productDTO.cantidadCritica(),
+                productDTO.cantidadDisponible(),
+                productDTO.category()
+        );
+        return ResponseEntity.ok(productService.save(updatedDTO));
     }
 
     @Operation(summary = "Delete a product", description = "Delete a product by its ID.")
@@ -75,5 +92,21 @@ public class ProductController {
     public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
         productService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Generate exception on product", description = "Exception on product by its ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Product exception added"),
+            @ApiResponse(responseCode = "404", description = "Product not found")
+    })
+    @PutMapping("/outproduct/{id}")
+    public ResponseEntity<ApiResp<ProductDTO>> outProduct(
+            @PathVariable long id,
+            @RequestBody ProductOutDTO productOutDTO
+    ) {
+        ApiResp<ProductDTO> response = productService.outProduct(id, productOutDTO);
+        return response.status().equals("SUCCESS")
+                ? ResponseEntity.ok(response)
+                : ResponseEntity.badRequest().body(response);
     }
 }
