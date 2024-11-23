@@ -11,7 +11,7 @@ interface Product {
   estado: boolean;
   cantidadCritica: number;
   cantidadDisponible: number;
-  categoria: string;
+  category: string; // Cambiado para que coincida con el servidor
 }
 
 const Productos: React.FC = () => {
@@ -23,7 +23,7 @@ const Productos: React.FC = () => {
     estado: true,
     cantidadCritica: 0,
     cantidadDisponible: 0,
-    categoria: "",
+    category: "",
   });
   const [activeOption, setActiveOption] = useState<string>("Agregar");
   const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
@@ -45,7 +45,16 @@ const Productos: React.FC = () => {
       const response = await fetch(API_URL);
       if (response.ok) {
         const data = await response.json();
-        setProducts(data);
+        if (data.length === 0) {
+          setPopupMessage("La base de datos está vacía.");
+          setShowPopup(true);
+        }
+        setProducts(
+          data.map((product: any) => ({
+            ...product,
+            category: product.category || product.categoria,
+          }))
+        );
       } else {
         setPopupMessage(`Error al obtener productos: ${response.status}`);
         setShowPopup(true);
@@ -75,11 +84,267 @@ const Productos: React.FC = () => {
     setPopupMessage("");
   };
 
+  const handleProductSelect = (productId: number) => {
+    const selectedProduct = products.find((product) => product.id === productId);
+    if (selectedProduct) {
+      setSelectedProductId(productId);
+      setNewProduct({
+        id: selectedProduct.id,
+        name: selectedProduct.name,
+        description: selectedProduct.description,
+        price: selectedProduct.price,
+        estado: selectedProduct.estado,
+        cantidadCritica: selectedProduct.cantidadCritica,
+        cantidadDisponible: selectedProduct.cantidadDisponible,
+        category: selectedProduct.category,
+      });
+      setActiveOption("Salidas de Inventario");
+    }
+  };
+
+  const addProduct = async () => {
+    if (
+      !newProduct.name ||
+      !newProduct.description ||
+      !newProduct.price ||
+      !newProduct.category ||
+      !newProduct.cantidadDisponible
+    ) {
+      setPopupMessage("Todos los campos son obligatorios.");
+      setShowPopup(true);
+      return;
+    }
+
+    if (products.some((product) => product.name === newProduct.name)) {
+      setPopupMessage("El producto ya existe en la base de datos.");
+      setShowPopup(true);
+      return;
+    }
+
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newProduct),
+      });
+
+      if (response.ok) {
+        setPopupMessage("Producto agregado con éxito.");
+        setShowPopup(true);
+        fetchProducts();
+        setNewProduct({
+          name: "",
+          description: "",
+          price: 0,
+          estado: true,
+          cantidadCritica: 0,
+          cantidadDisponible: 0,
+          category: "",
+        });
+      } else {
+        setPopupMessage(`Error al agregar producto: ${response.status}`);
+        setShowPopup(true);
+      }
+    } catch (error) {
+      setPopupMessage(`Error de red: ${error}`);
+      setShowPopup(true);
+    }
+  };
+
+  const processWithdraw = async () => {
+    if (!selectedProductId || !withdrawQuantity || !withdrawReason) {
+      setPopupMessage("Por favor, selecciona un producto, la cantidad a retirar y el motivo.");
+      setShowPopup(true);
+      return;
+    }
+
+    const selectedProduct = products.find((product) => product.id === selectedProductId);
+
+    if (!selectedProduct) {
+      setPopupMessage("El producto seleccionado no existe.");
+      setShowPopup(true);
+      return;
+    }
+
+    if (selectedProduct.cantidadDisponible < withdrawQuantity) {
+      setPopupMessage("La cantidad a retirar excede el inventario disponible.");
+      setShowPopup(true);
+      return;
+    }
+
+    try {
+      const updatedProduct = {
+        ...selectedProduct,
+        cantidadDisponible: selectedProduct.cantidadDisponible - withdrawQuantity,
+      };
+
+      const response = await fetch(`${API_URL}/${selectedProductId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedProduct),
+      });
+
+      if (response.ok) {
+        setPopupMessage("Salida de inventario registrada con éxito.");
+        setShowPopup(true);
+        fetchProducts();
+        setWithdrawQuantity(0);
+        setWithdrawReason("");
+        setSelectedProductId(null);
+      } else {
+        setPopupMessage(`Error al registrar la salida de inventario: ${response.status}`);
+        setShowPopup(true);
+      }
+    } catch (error) {
+      setPopupMessage(`Error de red: ${error}`);
+      setShowPopup(true);
+    }
+  };
+
+  const modifyProduct = async () => {
+    if (!selectedProductId) {
+      setPopupMessage("Selecciona un producto para modificar.");
+      setShowPopup(true);
+      return;
+    }
+
+    if (
+      !newProduct.name ||
+      !newProduct.description ||
+      !newProduct.price ||
+      !newProduct.category ||
+      !newProduct.cantidadDisponible
+    ) {
+      setPopupMessage("Todos los campos son obligatorios para modificar.");
+      setShowPopup(true);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/${selectedProductId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newProduct),
+      });
+
+      if (response.ok) {
+        setPopupMessage("Producto modificado con éxito.");
+        setShowPopup(true);
+        fetchProducts();
+        setSelectedProductId(null);
+        setNewProduct({
+          name: "",
+          description: "",
+          price: 0,
+          estado: true,
+          cantidadCritica: 0,
+          cantidadDisponible: 0,
+          category: "",
+        });
+      } else {
+        setPopupMessage(`Error al modificar producto: ${response.status}`);
+        setShowPopup(true);
+      }
+    } catch (error) {
+      setPopupMessage(`Error de red: ${error}`);
+      setShowPopup(true);
+    }
+  };
+
   const renderContent = () => {
+    if (activeOption === "Salidas de Inventario") {
+      return (
+        <div>
+          <h2 style={styles.title}>Salidas de Inventario</h2>
+          {selectedProductId && newProduct ? (
+            <div>
+              <form style={styles.form}>
+                <label style={styles.label}>Nombre</label>
+                <input
+                  type="text"
+                  value={newProduct.name}
+                  readOnly
+                  style={styles.input}
+                />
+                <label style={styles.label}>Descripción</label>
+                <input
+                  type="text"
+                  value={newProduct.description}
+                  readOnly
+                  style={styles.input}
+                />
+                <label style={styles.label}>Cantidad Disponible</label>
+                <input
+                  type="number"
+                  value={newProduct.cantidadDisponible}
+                  readOnly
+                  style={styles.input}
+                />
+                <label style={styles.label}>Cantidad a Retirar</label>
+                <input
+                  type="number"
+                  name="withdrawQuantity"
+                  value={withdrawQuantity}
+                  onChange={handleWithdrawInputChange}
+                  style={styles.input}
+                />
+                <label style={styles.label}>Razón del Retiro</label>
+                <input
+                  type="text"
+                  name="withdrawReason"
+                  value={withdrawReason}
+                  onChange={handleWithdrawInputChange}
+                  style={styles.input}
+                />
+                <button
+                  type="button"
+                  onClick={processWithdraw}
+                  style={styles.addButton}
+                >
+                  Realizar Salida
+                </button>
+              </form>
+            </div>
+          ) : (
+            <div>
+              <p>Selecciona un producto para registrar la salida de inventario.</p>
+              <table style={styles.table}>
+                <thead>
+                  <tr>
+                    <th style={styles.tableHeader}>Nombre</th>
+                    <th style={styles.tableHeader}>Descripción</th>
+                    <th style={styles.tableHeader}>Cantidad Disponible</th>
+                    <th style={styles.tableHeader}>Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {products.map((product) => (
+                    <tr key={product.id}>
+                      <td style={styles.tableCell}>{product.name}</td>
+                      <td style={styles.tableCell}>{product.description}</td>
+                      <td style={styles.tableCell}>{product.cantidadDisponible}</td>
+                      <td style={styles.tableCell}>
+                        <button
+                          style={styles.modifyButton}
+                          onClick={() => handleProductSelect(product.id)}
+                        >
+                          Seleccionar
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      );
+    }
+
     if (activeOption === "Consultar") {
       return (
         <div>
-          <h2>Consultar Productos</h2>
+          <h2 style={styles.title}>Consultar Productos</h2>
           {products.length === 0 ? (
             <p>No hay productos disponibles.</p>
           ) : (
@@ -100,7 +365,7 @@ const Productos: React.FC = () => {
                     <td style={styles.tableCell}>{product.name}</td>
                     <td style={styles.tableCell}>{product.description}</td>
                     <td style={styles.tableCell}>${product.price}</td>
-                    <td style={styles.tableCell}>{product.categoria}</td>
+                    <td style={styles.tableCell}>{product.category}</td>
                     <td style={styles.tableCell}>{product.cantidadDisponible}</td>
                     <td style={styles.tableCell}>
                       <button
@@ -130,7 +395,7 @@ const Productos: React.FC = () => {
 
     return (
       <div>
-        <h2>{activeOption} Producto</h2>
+        <h2 style={styles.title}>Productos</h2>
         <form style={styles.form}>
           <label style={styles.label}>Nombre</label>
           <input
@@ -160,7 +425,7 @@ const Productos: React.FC = () => {
           <input
             type="text"
             name="categoria"
-            value={newProduct.categoria || ""}
+            value={newProduct.category || ""}
             onChange={handleInputChange}
             style={styles.input}
           />
@@ -172,7 +437,11 @@ const Productos: React.FC = () => {
             onChange={handleInputChange}
             style={styles.input}
           />
-          <button type="button" onClick={() => console.log("Agregar producto")} style={styles.addButton}>
+          <button
+            type="button"
+            onClick={activeOption === "Agregar" ? addProduct : modifyProduct}
+            style={styles.addButton}
+          >
             {activeOption}
           </button>
         </form>
@@ -215,6 +484,7 @@ const Productos: React.FC = () => {
       </div>
     </div>
   );
+
 };
 
 const styles: { [key: string]: React.CSSProperties } = {
@@ -335,6 +605,21 @@ const styles: { [key: string]: React.CSSProperties } = {
     cursor: "pointer",
     padding: "0.5rem 1rem",
     borderRadius: "4px",
+  },
+  title: {
+    fontSize: '2rem',
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
+    margin: '1rem 0',
+    textTransform: 'uppercase',
+    letterSpacing: '2px',
+    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
+    borderBottom: '2px solid #007bff',
+    paddingBottom: '0.5rem',
+    width: 'fit-content',
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
 
 };
