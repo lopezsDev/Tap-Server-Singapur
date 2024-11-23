@@ -26,13 +26,16 @@ const Productos: React.FC = () => {
     categoria: "",
   });
   const [activeOption, setActiveOption] = useState<string>("Agregar");
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
   const [popupMessage, setPopupMessage] = useState<string>("");
   const [showPopup, setShowPopup] = useState<boolean>(false);
+  const [withdrawQuantity, setWithdrawQuantity] = useState<number>(0);
+  const [withdrawReason, setWithdrawReason] = useState<string>("");
 
   const API_URL = "http://192.168.0.17:8080/api/products";
 
   useEffect(() => {
-    if (activeOption === "Consultar") {
+    if (["Consultar", "Salidas de Inventario"].includes(activeOption)) {
       fetchProducts();
     }
   }, [activeOption]);
@@ -58,88 +61,18 @@ const Productos: React.FC = () => {
     setNewProduct({ ...newProduct, [name]: value });
   };
 
+  const handleWithdrawInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (name === "withdrawQuantity") {
+      setWithdrawQuantity(Number(value));
+    } else if (name === "withdrawReason") {
+      setWithdrawReason(value);
+    }
+  };
+
   const closePopup = () => {
     setShowPopup(false);
     setPopupMessage("");
-  };
-
-  const addProduct = async () => {
-    try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newProduct),
-      });
-
-      if (response.ok) {
-        setPopupMessage("Producto agregado con éxito.");
-        setShowPopup(true);
-        fetchProducts();
-        setNewProduct({
-          name: "",
-          description: "",
-          price: 0,
-          estado: true,
-          cantidadCritica: 0,
-          cantidadDisponible: 0,
-          categoria: "",
-        });
-      } else {
-        setPopupMessage(`Error al agregar producto: ${response.status}`);
-        setShowPopup(true);
-      }
-    } catch (error) {
-      setPopupMessage(`Error de red: ${error}`);
-      setShowPopup(true);
-    }
-  };
-
-  const modifyProduct = async () => {
-    if (!newProduct.id) {
-      setPopupMessage("Selecciona un producto para modificar.");
-      setShowPopup(true);
-      return;
-    }
-
-    try {
-      const response = await fetch(`${API_URL}/${newProduct.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newProduct),
-      });
-
-      if (response.ok) {
-        setPopupMessage("Producto modificado con éxito.");
-        setShowPopup(true);
-        fetchProducts();
-      } else {
-        setPopupMessage(`Error al modificar producto: ${response.status}`);
-        setShowPopup(true);
-      }
-    } catch (error) {
-      setPopupMessage(`Error de red: ${error}`);
-      setShowPopup(true);
-    }
-  };
-
-  const deleteProduct = async (id: number) => {
-    try {
-      const response = await fetch(`${API_URL}/${id}`, {
-        method: "DELETE",
-      });
-
-      if (response.ok) {
-        setPopupMessage("Producto eliminado con éxito.");
-        setShowPopup(true);
-        fetchProducts();
-      } else {
-        setPopupMessage(`Error al eliminar producto: ${response.status}`);
-        setShowPopup(true);
-      }
-    } catch (error) {
-      setPopupMessage(`Error de red: ${error}`);
-      setShowPopup(true);
-    }
   };
 
   const renderContent = () => {
@@ -153,28 +86,37 @@ const Productos: React.FC = () => {
             <table style={styles.table}>
               <thead>
                 <tr>
-                  <th>Nombre</th>
-                  <th>Descripción</th>
-                  <th>Precio</th>
-                  <th>Categoría</th>
-                  <th>Disponible</th>
-                  <th>Acciones</th>
+                  <th style={styles.tableHeader}>Nombre</th>
+                  <th style={styles.tableHeader}>Descripción</th>
+                  <th style={styles.tableHeader}>Precio</th>
+                  <th style={styles.tableHeader}>Categoría</th>
+                  <th style={styles.tableHeader}>Disponible</th>
+                  <th style={styles.tableHeader}>Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {products.map((product) => (
                   <tr key={product.id}>
-                    <td>{product.name}</td>
-                    <td>{product.description}</td>
-                    <td>${product.price}</td>
-                    <td>{product.categoria}</td>
-                    <td>{product.cantidadDisponible}</td>
-                    <td>
+                    <td style={styles.tableCell}>{product.name}</td>
+                    <td style={styles.tableCell}>{product.description}</td>
+                    <td style={styles.tableCell}>${product.price}</td>
+                    <td style={styles.tableCell}>{product.categoria}</td>
+                    <td style={styles.tableCell}>{product.cantidadDisponible}</td>
+                    <td style={styles.tableCell}>
+                      <button
+                        style={styles.modifyButton}
+                        onClick={() => {
+                          setSelectedProductId(product.id);
+                          setActiveOption("Modificar");
+                        }}
+                      >
+                        Modificar
+                      </button>
                       <button
                         style={styles.deleteButton}
-                        onClick={() => deleteProduct(product.id)}
+                        onClick={() => console.log("Eliminar producto")}
                       >
-                        Eliminar
+                        Descontinuar
                       </button>
                     </td>
                   </tr>
@@ -190,61 +132,47 @@ const Productos: React.FC = () => {
       <div>
         <h2>{activeOption} Producto</h2>
         <form style={styles.form}>
-          <label style={styles.label}>
-            Nombre
-            <input
-              type="text"
-              name="name"
-              value={newProduct.name || ""}
-              onChange={handleInputChange}
-              style={styles.input}
-            />
-          </label>
-          <label style={styles.label}>
-            Descripción
-            <input
-              type="text"
-              name="description"
-              value={newProduct.description || ""}
-              onChange={handleInputChange}
-              style={styles.input}
-            />
-          </label>
-          <label style={styles.label}>
-            Precio
-            <input
-              type="number"
-              name="price"
-              value={newProduct.price || ""}
-              onChange={handleInputChange}
-              style={styles.input}
-            />
-          </label>
-          <label style={styles.label}>
-            Categoría
-            <input
-              type="text"
-              name="categoria"
-              value={newProduct.categoria || ""}
-              onChange={handleInputChange}
-              style={styles.input}
-            />
-          </label>
-          <label style={styles.label}>
-            Cantidad Disponible
-            <input
-              type="number"
-              name="cantidadDisponible"
-              value={newProduct.cantidadDisponible || ""}
-              onChange={handleInputChange}
-              style={styles.input}
-            />
-          </label>
-          <button
-            type="button"
-            onClick={addProduct}
-            style={styles.addButton}
-          >
+          <label style={styles.label}>Nombre</label>
+          <input
+            type="text"
+            name="name"
+            value={newProduct.name || ""}
+            onChange={handleInputChange}
+            style={styles.input}
+          />
+          <label style={styles.label}>Descripción</label>
+          <input
+            type="text"
+            name="description"
+            value={newProduct.description || ""}
+            onChange={handleInputChange}
+            style={styles.input}
+          />
+          <label style={styles.label}>Precio</label>
+          <input
+            type="number"
+            name="price"
+            value={newProduct.price || ""}
+            onChange={handleInputChange}
+            style={styles.input}
+          />
+          <label style={styles.label}>Categoría</label>
+          <input
+            type="text"
+            name="categoria"
+            value={newProduct.categoria || ""}
+            onChange={handleInputChange}
+            style={styles.input}
+          />
+          <label style={styles.label}>Cantidad Disponible</label>
+          <input
+            type="number"
+            name="cantidadDisponible"
+            value={newProduct.cantidadDisponible || ""}
+            onChange={handleInputChange}
+            style={styles.input}
+          />
+          <button type="button" onClick={() => console.log("Agregar producto")} style={styles.addButton}>
             {activeOption}
           </button>
         </form>
@@ -257,37 +185,37 @@ const Productos: React.FC = () => {
       <Header />
       <div style={styles.pageContainer}>
         <div style={styles.sidebar}>
-          {["Agregar", "Consultar", "Modificar", "Eliminar"].map((option) => (
-            <button
-              key={option}
-              onClick={() => setActiveOption(option)}
-              style={{
-                ...styles.sidebarButton,
-                backgroundColor: activeOption === option ? "#555" : "#333",
-              }}
-            >
-              {option}
-            </button>
-          ))}
+          {["Agregar", "Consultar", "Modificar", "Descontinuar", "Cálculo de Inventario", "Salidas de Inventario"].map(
+            (option) => (
+              <button
+                key={option}
+                onClick={() => setActiveOption(option)}
+                style={{
+                  ...styles.sidebarButton,
+                  backgroundColor: activeOption === option ? "#555" : "#333",
+                }}
+              >
+                {option}
+              </button>
+            )
+          )}
         </div>
         <div style={styles.content}>{renderContent()}</div>
-      </div>
 
-      {/* Ventana emergente */}
-      {showPopup && (
-        <div style={styles.popupOverlay}>
-          <div style={styles.popup}>
-            <h3>{popupMessage}</h3>
-            <button onClick={closePopup} style={styles.popupButton}>
-              Aceptar
-            </button>
+        {showPopup && (
+          <div style={styles.popupOverlay}>
+            <div style={styles.popup}>
+              <h3>{popupMessage}</h3>
+              <button onClick={closePopup} style={styles.popupButton}>
+                Aceptar
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
-
 
 const styles: { [key: string]: React.CSSProperties } = {
   pageContainer: {
@@ -296,6 +224,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     maxWidth: "1200px",
     margin: "0 auto",
     marginTop: "2rem",
+    color: "#fff",
   },
   sidebar: {
     width: "20%",
@@ -304,6 +233,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     flexDirection: "column",
     padding: "1rem",
     gap: "1rem",
+    borderRadius: "8px",
   },
   sidebarButton: {
     padding: "1rem",
@@ -374,6 +304,39 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderRadius: "4px",
     cursor: "pointer",
   },
+  table: {
+    width: "100%",
+    borderCollapse: "collapse",
+    textAlign: "left",
+  },
+  tableHeader: {
+    backgroundColor: "#333",
+    color: "#fff",
+    padding: "0.75rem",
+    borderBottom: "2px solid #555",
+  },
+  tableCell: {
+    padding: "0.75rem",
+    borderBottom: "1px solid #555",
+  },
+  modifyButton: {
+    backgroundColor: "#007bff",
+    color: "#fff",
+    border: "none",
+    cursor: "pointer",
+    padding: "0.5rem 1rem",
+    marginRight: "0.5rem",
+    borderRadius: "4px",
+  },
+  deleteButton: {
+    backgroundColor: "#dc3545",
+    color: "#fff",
+    border: "none",
+    cursor: "pointer",
+    padding: "0.5rem 1rem",
+    borderRadius: "4px",
+  },
+
 };
 
 export default Productos;

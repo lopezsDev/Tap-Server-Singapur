@@ -1,5 +1,5 @@
 'use client';
-import { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import Header from '../../components/Header';
 
 interface Category {
@@ -22,7 +22,6 @@ const Categorias: React.FC = () => {
 
   const API_URL = 'http://192.168.0.17:8080/api/categories';
 
-  // Fetch categories on load
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -46,6 +45,19 @@ const Categorias: React.FC = () => {
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value } = e.target;
     setNewCategory({ ...newCategory, [name]: value });
+  };
+
+  const handleCategorySelect = (categoryId: number) => {
+    const selectedCategory = categories.find((category) => category.id === categoryId);
+    if (selectedCategory) {
+      setSelectedCategoryId(categoryId);
+      setNewCategory({
+        name: selectedCategory.name,
+        description: selectedCategory.description,
+        unidadMedida: selectedCategory.unidadMedida,
+      });
+      setActiveOption("Modificar");
+    }
   };
 
   const showAlert = (type: 'success' | 'error', message: string) => {
@@ -146,14 +158,32 @@ const Categorias: React.FC = () => {
                   <th style={styles.headerCell}>Nombre</th>
                   <th style={styles.headerCell}>Descripción</th>
                   <th style={styles.headerCell}>Unidad de Medida</th>
+                  <th style={styles.headerCell}>Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {categories.map((category) => (
-                  <tr key={category.id} onClick={() => setSelectedCategoryId(category.id!)}>
+                  <tr key={category.id}>
                     <td style={styles.cell}>{category.name}</td>
                     <td style={styles.cell}>{category.description}</td>
                     <td style={styles.cell}>{category.unidadMedida}</td>
+                    <td style={styles.cell}>
+                      <button
+                        style={styles.modifyButton}
+                        onClick={() => handleCategorySelect(category.id!)}
+                      >
+                        Modificar
+                      </button>
+                      <button
+                        style={styles.deleteButton}
+                        onClick={() => {
+                          setSelectedCategoryId(category.id!);
+                          discontinueCategory();
+                        }}
+                      >
+                        Descontinuar
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -199,13 +229,7 @@ const Categorias: React.FC = () => {
           </label>
           <button
             type="button"
-            onClick={
-              activeOption === "Agregar"
-                ? addCategory
-                : activeOption === "Modificar"
-                ? modifyCategory
-                : discontinueCategory
-            }
+            onClick={activeOption === "Agregar" ? addCategory : modifyCategory}
             style={styles.addButton}
           >
             {activeOption}
@@ -233,20 +257,18 @@ const Categorias: React.FC = () => {
       )}
       <div style={styles.pageContainer}>
         <div style={styles.sidebar}>
-          {["Agregar", "Consultar", "Modificar", "Descontinuar"].map(
-            (option) => (
-              <button
-                key={option}
-                onClick={() => setActiveOption(option)}
-                style={{
-                  ...styles.sidebarButton,
-                  backgroundColor: activeOption === option ? "#555" : "#111",
-                }}
-              >
-                {option}
-              </button>
-            )
-          )}
+          {["Agregar", "Consultar", "Modificar", "Descontinuar"].map((option) => (
+            <button
+              key={option}
+              onClick={() => setActiveOption(option)}
+              style={{
+                ...styles.sidebarButton,
+                backgroundColor: activeOption === option ? "#555" : "#111",
+              }}
+            >
+              {option}
+            </button>
+          ))}
         </div>
         <div style={styles.content}>{renderContent()}</div>
       </div>
@@ -256,6 +278,37 @@ const Categorias: React.FC = () => {
 
 const styles: { [key: string]: React.CSSProperties } = {
   // Estilos originales
+  table: {
+    width: '100%',
+    borderCollapse: 'collapse',
+  },
+  headerCell: {
+    padding: '0.75rem',
+    backgroundColor: '#333',
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  cell: {
+    padding: '0.75rem',
+    borderBottom: '1px solid #ddd',
+  },
+  modifyButton: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#007bff',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+  deleteButton: {
+    padding: '0.5rem 1rem',
+    backgroundColor: '#dc3545',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    marginLeft: '0.5rem',
+  },
   pageContainer: {
     display: 'flex',
     width: '100%',
@@ -304,7 +357,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderRadius: '4px',
     border: '1px solid #ddd',
     marginBottom: '1rem',
-    color:'#fffff',
+    color:'#202124',
   },
   addButton: {
     padding: '0.75rem',
@@ -313,20 +366,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     border: 'none',
     borderRadius: '4px',
     cursor: 'pointer',
-  },
-  table: {
-    width: '100%',
-    borderCollapse: 'collapse',
-  },
-  headerCell: {
-    padding: '0.75rem',
-    backgroundColor: '#333',
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  cell: {
-    padding: '0.75rem',
-    borderBottom: '1px solid #ddd',
   },
 };
 
