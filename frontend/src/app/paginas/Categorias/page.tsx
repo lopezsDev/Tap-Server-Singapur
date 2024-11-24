@@ -148,7 +148,7 @@ const Categorias: React.FC = () => {
     if (activeOption === "Consultar") {
       return (
         <div>
-          <h2>Consultar Categorías</h2>
+          <h2 style={styles.title}>Consultar Categorías</h2>
           {categories.length === 0 ? (
             <p>No hay categorías disponibles.</p>
           ) : (
@@ -195,7 +195,7 @@ const Categorias: React.FC = () => {
 
     return (
       <div>
-        <h2>{activeOption} Categoría</h2>
+        <h2 style={styles.title}>Categoría</h2>
         <form style={styles.form}>
           <label style={styles.label}>
             Nombre
@@ -367,6 +367,22 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderRadius: '4px',
     cursor: 'pointer',
   },
+  title: {
+    fontSize: '2rem',
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
+    margin: '1rem 0',
+    textTransform: 'uppercase',
+    letterSpacing: '2px',
+    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
+    borderBottom: '2px solid #007bff',
+    paddingBottom: '0.5rem',
+    width: 'fit-content',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+
 };
 
 export default Categorias;
