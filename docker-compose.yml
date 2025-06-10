@@ -1,0 +1,72 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: ${POSTGRES_CONTAINER_NAME}
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - tap_serve_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ${BACKEND_CONTAINER_NAME}
+    ports:
+      - "${BACKEND_PORT}:8080"
+    env_file:
+      - .env.backend
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://${POSTGRES_CONTAINER_NAME}:5432/${POSTGRES_DB}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=${JPA_DDL_AUTO}
+      - SPRING_JPA_SHOW_SQL=${JPA_SHOW_SQL}
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
+      - SERVER_PORT=8080
+    volumes:
+      - ./backend:/app
+      - maven_cache:/root/.m2
+    depends_on:
+      - postgres
+    networks:
+      - tap_serve_network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ${FRONTEND_CONTAINER_NAME}
+    ports:
+      - "${FRONTEND_PORT}:3000"
+    env_file:
+      - .env.frontend
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+      - NEXT_PUBLIC_APP_ENV=${APP_ENV}
+    volumes:
+      - /app/node_modules
+      - /app/.next
+      - ./frontend:/app
+
+    depends_on:
+      - backend
+    networks:
+      - tap_serve_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  maven_cache:
+
+networks:
+  tap_serve_network:
+    driver: bridge
