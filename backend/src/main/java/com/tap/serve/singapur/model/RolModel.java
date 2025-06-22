@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Entity
@@ -20,4 +23,10 @@ public class RolModel {
     @Column(name = "role_name")
     @Enumerated(EnumType.STRING)
     private RolEnum rol;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "role_permissions", joinColumns = @JoinColumn(name = "role_id")
+    ,inverseJoinColumns = @JoinColumn(name = "permission_id"))
+    private Set<PermissionModel> permissionsList = new HashSet<>();
+
 }
