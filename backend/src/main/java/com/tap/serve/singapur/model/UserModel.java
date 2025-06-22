@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Setter @Getter
 @NoArgsConstructor @AllArgsConstructor
 @Entity
@@ -32,4 +35,9 @@ public class UserModel {
 
     @Column(name = "is_credentials_non_expired")
     private boolean isCredentialsNonExpired;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id")
+            , inverseJoinColumns = @JoinColumn(name = "rol_id"))
+    private Set<RolModel> roles = new HashSet<>();
 }
