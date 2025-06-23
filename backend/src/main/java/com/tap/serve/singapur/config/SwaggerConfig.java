@@ -14,7 +14,7 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("Tap & Serve Singapur API")
-                        .version("1.0")
+                        .version("1.1")
                         .description("API para la gestión de Singapur")
                         .contact(new Contact()
                                 .name("Samir López M.")

@@ -76,4 +76,14 @@ public class CategoryController {
         categoryService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/saludo")
+    public String saludo() {
+        return "Hello World!";
+    }
+
+    @GetMapping("/saludo-jefe")
+    public String saludoJefe() {
+        return "El jefe es un puto!";
+    }
 }

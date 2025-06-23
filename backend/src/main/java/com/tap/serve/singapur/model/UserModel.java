@@ -9,7 +9,7 @@ import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
 
-@Setter @Getter
+@Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Entity
 @Table(name = "users")

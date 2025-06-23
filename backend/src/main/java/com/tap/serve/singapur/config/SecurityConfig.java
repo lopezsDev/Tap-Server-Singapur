@@ -1,5 +1,7 @@
 package com.tap.serve.singapur.config;
 
+import com.tap.serve.singapur.repository.UserRepository;
+import com.tap.serve.singapur.service.UserServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -30,11 +33,11 @@ public class SecurityConfig {
 
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
-                .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(http -> {
                     //Primero se configuran los endpoints publicos
-                    http.requestMatchers(HttpMethod.GET, "api/categories/saludo").permitAll();
+                    http.requestMatchers(HttpMethod.GET,"/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll();
+                    http.requestMatchers(HttpMethod.GET, "api/categories/saludo-jefe").permitAll();
 
                     //Luego se configuran los endpoints privados o que requieren auntenticacion
                     http.requestMatchers(HttpMethod.POST, "api/categories/saludo-jefe").hasAuthority("DELETE");
@@ -52,28 +55,21 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationProvider authenticationProvider(UserRepository userRepository) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(userDetailsService());
-
+        provider.setUserDetailsService(userDetailsService(userRepository));
         return provider;
     }
 
     @Bean
-    public UserDetailsService userDetailsService(){
-        UserDetails userDet = User.withUsername("samir")
-                .password("1234")
-                .roles("ADMIN")
-                .authorities("READ", "CREATE")
-                .build();
-
-        return new InMemoryUserDetailsManager(userDet);
+    public UserDetailsService userDetailsService(UserRepository userRepository){
+        return new UserServiceImpl(userRepository);
 
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 }

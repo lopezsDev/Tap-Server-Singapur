@@ -1,15 +1,13 @@
 package com.tap.serve.singapur.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Setter @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "producto")
+@Table(name = "product")
 public class ProductModel {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
