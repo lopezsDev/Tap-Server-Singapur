@@ -1,6 +1,6 @@
 package com.tap.serve.singapur.service;
 
-import com.tap.serve.singapur.config.ApiResp;
+import com.tap.serve.singapur.dto.ApiResp;
 import com.tap.serve.singapur.dto.ProductDTO;
 import com.tap.serve.singapur.dto.ProductOutDTO;
 import com.tap.serve.singapur.mapper.ProductMapper;

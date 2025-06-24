@@ -1,6 +1,6 @@
 package com.tap.serve.singapur.controller;
 
-import com.tap.serve.singapur.config.ApiResp;
+import com.tap.serve.singapur.dto.ApiResp;
 import com.tap.serve.singapur.dto.ProductDTO;
 import com.tap.serve.singapur.dto.ProductOutDTO;
 import com.tap.serve.singapur.model.ProductModel;

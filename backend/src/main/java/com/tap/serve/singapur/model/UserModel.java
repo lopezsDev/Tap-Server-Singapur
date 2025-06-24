@@ -24,6 +24,10 @@ public class UserModel {
 
     private String password;
 
+    private String name;
+
+    private String lastname;
+
     @Column(name = "is_enabled")
     private boolean isEnabled;
 
