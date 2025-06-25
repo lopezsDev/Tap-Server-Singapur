@@ -1,26 +1,31 @@
 package com.tap.serve.singapur.security;
 
 import com.tap.serve.singapur.model.UserModel;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
     private final UserModel user;
 
-    public CustomUserDetails(UserModel user) {
-        this.user = user;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRol().getPermissionsList().stream()
-                .map(p -> new SimpleGrantedAuthority("ROLE_" + p.getPermissionName().name()))
-                .collect(Collectors.toList());
+        Set<GrantedAuthority> authorities = user.getRol().getPermissionsList()
+                .stream()
+                .map(permission -> new SimpleGrantedAuthority("PERMISSION_" + permission.getPermissionName().name()))
+                .collect(Collectors.toSet());
+
+        // Agregar el rol como autoridad también
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRol().getRol().name()));
+
+        return authorities;
     }
 
     @Override

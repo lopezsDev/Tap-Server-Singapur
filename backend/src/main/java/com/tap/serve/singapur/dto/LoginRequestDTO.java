@@ -1,6 +1,6 @@
 package com.tap.serve.singapur.dto;
 
-public record LoginDTO(
+public record LoginRequestDTO(
         String username,
         String password
 ) {
