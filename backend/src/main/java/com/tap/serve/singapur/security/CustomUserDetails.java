@@ -18,9 +18,8 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles().stream()
-                .flatMap(r -> r.getPermissionsList().stream())
-                .map(p -> new SimpleGrantedAuthority(p.getPermissionName().name()))
+        return user.getRol().getPermissionsList().stream()
+                .map(p -> new SimpleGrantedAuthority("ROLE_" + p.getPermissionName().name()))
                 .collect(Collectors.toList());
     }
 
@@ -36,21 +35,25 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return user.isAccountNonExpired();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return user.isAccountNonLocked();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return user.isCredentialsNonExpired();
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.isEnabled();
+    }
+
+    public UserModel getUser() {
+        return user;
     }
 }

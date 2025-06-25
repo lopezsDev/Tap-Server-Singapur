@@ -1,23 +1,26 @@
 package com.tap.serve.singapur.service;
 
 import com.tap.serve.singapur.config.JwtUtil;
-import com.tap.serve.singapur.dto.ApiResp;
 import com.tap.serve.singapur.dto.LoginDTO;
 import com.tap.serve.singapur.dto.SignupRequestDTO;
+import com.tap.serve.singapur.model.PermissionModel;
 import com.tap.serve.singapur.model.RolModel;
 import com.tap.serve.singapur.model.UserModel;
+import com.tap.serve.singapur.repository.PermissionRepository;
 import com.tap.serve.singapur.repository.RolRepository;
 import com.tap.serve.singapur.repository.UserRepository;
 import com.tap.serve.singapur.security.CustomUserDetails;
+import com.tap.serve.singapur.utils.error.UsuarioYaExisteException;
+import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class AuthService {
 
     private final AuthenticationManager authenticationManager;
@@ -25,16 +28,9 @@ public class AuthService {
     private final RolRepository rolRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
+    private final PermissionRepository permissionRepository;
 
-    public AuthService(AuthenticationManager authenticationManager, UserRepository userRepository, RolRepository rolRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
-        this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
-        this.rolRepository = rolRepository;
-        this.jwtUtil = jwtUtil;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    public ApiResp<Map<String, String>> login(LoginDTO dto) {
+    public String login(LoginDTO dto) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 dto.username(), dto.password()));
 
@@ -42,19 +38,26 @@ public class AuthService {
                 .map(CustomUserDetails::new)
                 .orElseThrow();
 
-        var jwt = jwtUtil.generateToken(userDetails);
-        return ApiResp.success("Login successful", Map.of("token", jwt));
+        return jwtUtil.generateToken(userDetails);
     }
 
-    public ApiResp<UserModel> signup(SignupRequestDTO dto) {
+    public UserModel signup(SignupRequestDTO dto) {
         // Verificar que no exista el username
         if (userRepository.findUserModelByUsername(dto.username()).isPresent()) {
-            return ApiResp.error("Username already exists");
+            throw new UsuarioYaExisteException("Username already exists");
         }
 
         // Buscar el rol
         RolModel rol = rolRepository.findByRol(dto.rol())
-                .orElseThrow(() -> new RuntimeException("Rol " + dto.rol() + " not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Rol " + dto.rol() + " not found"));
+
+        Set<PermissionModel> permisos = dto.permissions().stream()
+                .map(perm -> permissionRepository.findByPermissionName(perm.getPermissionName())
+                        .orElseThrow(() -> new IllegalArgumentException("Permiso " + perm + " no encontrado")))
+                .collect(Collectors.toSet());
+
+        rol.setPermissionsList(permisos);
+        rolRepository.save(rol);
 
         // Crear usuario
         UserModel user = new UserModel();
@@ -62,9 +65,12 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(dto.password()));
         user.setName(dto.name());
         user.setLastname(dto.lastname());
-        user.setRoles(Set.of(rol));
+        user.setRol(rol);
+        user.setEnabled(true);
+        user.setAccountNonExpired(true);
+        user.setAccountNonLocked(true);
+        user.setCredentialsNonExpired(true);
 
-        var savedUser = userRepository.save(user);
-        return ApiResp.success("User registered successfully", savedUser);
+        return userRepository.save(user);
     }
 }

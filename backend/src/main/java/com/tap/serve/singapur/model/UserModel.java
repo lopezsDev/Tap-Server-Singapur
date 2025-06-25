@@ -40,8 +40,7 @@ public class UserModel {
     @Column(name = "is_credentials_non_expired")
     private boolean isCredentialsNonExpired;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id")
-            , inverseJoinColumns = @JoinColumn(name = "rol_id"))
-    private Set<RolModel> roles = new HashSet<>();
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "rol_id")
+    private RolModel rol;
 }

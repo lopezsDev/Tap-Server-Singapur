@@ -18,5 +18,6 @@ public class PermissionModel {
     private Long id;
 
     @Column(name = "permission_name", nullable = false, updatable = false)
+    @Enumerated(EnumType.STRING)
     private PermissionEnum permissionName;
 }
