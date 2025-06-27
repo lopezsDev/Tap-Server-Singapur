@@ -1,6 +1,6 @@
-package com.tap.serve.singapur.utils.error;
+package com.tap.serve.singapur.utils.exception;
 
-import com.tap.serve.singapur.dto.ApiResp;
+import com.tap.serve.singapur.utils.ApiResp;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

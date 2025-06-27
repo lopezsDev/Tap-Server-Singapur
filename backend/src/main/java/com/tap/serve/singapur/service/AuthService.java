@@ -12,7 +12,7 @@ import com.tap.serve.singapur.model.UserModel;
 import com.tap.serve.singapur.repository.PermissionRepository;
 import com.tap.serve.singapur.repository.RolRepository;
 import com.tap.serve.singapur.repository.UserRepository;
-import com.tap.serve.singapur.utils.error.BadRequestException;
+import com.tap.serve.singapur.utils.exception.BadRequestException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

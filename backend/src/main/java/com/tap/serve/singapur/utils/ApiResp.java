@@ -1,4 +1,4 @@
-package com.tap.serve.singapur.dto;
+package com.tap.serve.singapur.utils;
 
 public record ApiResp<T>(
         String message,
