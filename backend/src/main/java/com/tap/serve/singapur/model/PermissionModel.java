@@ -17,7 +17,7 @@ public class PermissionModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "permission_name", nullable = false, updatable = false)
+    @Column(name = "permission_name", unique = true, nullable = false, updatable = false)
     @Enumerated(EnumType.STRING)
     private PermissionEnum permissionName;
 }
