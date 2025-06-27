@@ -1,6 +1,6 @@
 package com.tap.serve.singapur.mapper;
 
-import com.tap.serve.singapur.dto.ProductDTO;
+import com.tap.serve.singapur.dto.ProductResponseDTO;
 import com.tap.serve.singapur.model.CategoryModel;
 import com.tap.serve.singapur.model.ProductModel;
 import com.tap.serve.singapur.repository.CategoryRepository;
@@ -16,7 +16,7 @@ public class ProductMapper {
         this.categoryRepository = categoryRepository;
     }
 
-    public ProductModel toModel(ProductDTO dto) {
+    public ProductModel toModel(ProductResponseDTO dto) {
         CategoryModel category = categoryRepository.findByName(dto.category())
                 .orElseThrow(() -> new EntityNotFoundException("Categoría no encontrada: " + dto.category()));
 
@@ -33,8 +33,8 @@ public class ProductMapper {
         return model;
     }
 
-    public ProductDTO toDTO(ProductModel model) {
-        return new ProductDTO(
+    public ProductResponseDTO toDTO(ProductModel model) {
+        return new ProductResponseDTO(
                 model.getId(),
                 model.getName(),
                 model.getDescription(),

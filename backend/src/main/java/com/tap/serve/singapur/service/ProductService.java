@@ -1,7 +1,7 @@
 package com.tap.serve.singapur.service;
 
 import com.tap.serve.singapur.utils.ApiResp;
-import com.tap.serve.singapur.dto.ProductDTO;
+import com.tap.serve.singapur.dto.ProductResponseDTO;
 import com.tap.serve.singapur.dto.ProductOutputRequestDTO;
 import com.tap.serve.singapur.mapper.ProductMapper;
 import com.tap.serve.singapur.model.CategoryModel;
@@ -26,21 +26,21 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
-    public List<ProductDTO> findAll() {
+    public List<ProductResponseDTO> findAll() {
         return productRepository.findAll()
                 .stream()
                 .map(productMapper::toDTO)
                 .toList();
     }
 
-    public ProductDTO findById(long id) {
+    public ProductResponseDTO findById(long id) {
         ProductModel product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Producto con el id: " + id + " no encontrado"));
 
         return productMapper.toDTO(product);
     }
 
-    public ProductDTO save(ProductDTO productDTO) {
+    public ProductResponseDTO save(ProductResponseDTO productDTO) {
 
         ProductModel productModel = productMapper.toModel(productDTO);
 
@@ -64,7 +64,7 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public ApiResp<ProductDTO> outProduct(long id, ProductOutputRequestDTO productOutDTO) {
+    public ApiResp<ProductResponseDTO> outProduct(long id, ProductOutputRequestDTO productOutDTO) {
         try {
             ProductModel product = productRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException("Producto con id: " + id + " no encontrado"));
