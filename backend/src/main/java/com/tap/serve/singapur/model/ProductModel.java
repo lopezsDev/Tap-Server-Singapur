@@ -1,13 +1,13 @@
 package com.tap.serve.singapur.model;
 
+import com.tap.serve.singapur.enums.ProductStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Setter @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "product")
+@Entity @Table(name = "product")
 public class ProductModel {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,19 +19,19 @@ public class ProductModel {
 
     private Double price;
 
-    private boolean estado;
+    private ProductStatus estatus;
 
-    @Column(name = "cantidad_critica")
-    private int cantidadCritica;
+    @Column(name = "critical_quantity")
+    private int criticalQuantity;
 
-    @Column(name = "cantidad_disponible")
-    private int cantidadDisponible;
+    @Column(name = "available_quantity")
+    private int availableQuantity;
 
-    @Column(name = "cantidad_retirada")
-    private Integer cantidadRetirada;
+    @Column(name = "withdrawnQuantity")
+    private int withdrawnQuantity;
 
-    @Column(name = "motivo_retiro")
-    private String motivoRetiro;
+    @Column(name = "retirementReason")
+    private String retirementReason;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "category_id", nullable = false)

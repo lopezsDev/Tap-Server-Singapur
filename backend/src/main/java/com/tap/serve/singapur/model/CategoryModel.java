@@ -1,6 +1,7 @@
 package com.tap.serve.singapur.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.tap.serve.singapur.enums.UnitMeasure;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,8 +22,9 @@ public class CategoryModel {
 
     private String description;
 
-    @Column(name = "unidad_medida")
-    private String unidadMedida;
+    @Column(name = "unit_measure",  unique = true, nullable = false, updatable = true)
+    @Enumerated(EnumType.STRING)
+    private UnitMeasure unitOfMeasure;
 
     @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = CascadeType.PERSIST)

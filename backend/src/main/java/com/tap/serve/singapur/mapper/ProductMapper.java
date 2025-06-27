@@ -25,9 +25,9 @@ public class ProductMapper {
         model.setName(dto.name());
         model.setDescription(dto.description());
         model.setPrice(dto.price());
-        model.setEstado(dto.estado());
-        model.setCantidadCritica(dto.cantidadCritica());
-        model.setCantidadDisponible(dto.cantidadDisponible());
+        model.setEstatus(dto.estado());
+        model.setCriticalQuantity(dto.cantidadCritica());
+        model.setAvailableQuantity(dto.cantidadDisponible());
         model.setCategory(category);
 
         return model;
@@ -40,7 +40,7 @@ public class ProductMapper {
                 model.getDescription(),
                 model.getPrice(),
                 model.isEstado(),
-                model.getCantidadCritica(),
+                model.getCriticalQuantity(),
                 model.getCantidadDisponible(),
                 model.getCategory().getName()
         );
