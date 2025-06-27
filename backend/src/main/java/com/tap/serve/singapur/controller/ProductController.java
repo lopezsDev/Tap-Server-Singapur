@@ -2,7 +2,7 @@ package com.tap.serve.singapur.controller;
 
 import com.tap.serve.singapur.dto.ApiResp;
 import com.tap.serve.singapur.dto.ProductDTO;
-import com.tap.serve.singapur.dto.ProductOutDTO;
+import com.tap.serve.singapur.dto.ProductOutputRequestDTO;
 import com.tap.serve.singapur.model.ProductModel;
 import com.tap.serve.singapur.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -75,9 +75,9 @@ public class ProductController {
                 productDTO.name(),
                 productDTO.description(),
                 productDTO.price(),
-                productDTO.estado(),
-                productDTO.cantidadCritica(),
-                productDTO.cantidadDisponible(),
+                productDTO.productStatus(),
+                productDTO.criticalQuantity(),
+                productDTO.availableQuantity(),
                 productDTO.category()
         );
         return ResponseEntity.ok(productService.save(updatedDTO));
@@ -99,10 +99,10 @@ public class ProductController {
             @ApiResponse(responseCode = "204", description = "Product exception added"),
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
-    @PutMapping("/outproduct/{id}")
+    @PutMapping("/outputproduct/{id}")
     public ResponseEntity<ApiResp<ProductDTO>> outProduct(
             @PathVariable long id,
-            @RequestBody ProductOutDTO productOutDTO
+            @RequestBody ProductOutputRequestDTO productOutDTO
     ) {
         ApiResp<ProductDTO> response = productService.outProduct(id, productOutDTO);
         return response.status().equals("SUCCESS")

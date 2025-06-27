@@ -2,7 +2,7 @@ package com.tap.serve.singapur.service;
 
 import com.tap.serve.singapur.dto.ApiResp;
 import com.tap.serve.singapur.dto.ProductDTO;
-import com.tap.serve.singapur.dto.ProductOutDTO;
+import com.tap.serve.singapur.dto.ProductOutputRequestDTO;
 import com.tap.serve.singapur.mapper.ProductMapper;
 import com.tap.serve.singapur.model.CategoryModel;
 import com.tap.serve.singapur.model.ProductModel;
@@ -64,19 +64,19 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public ApiResp<ProductDTO> outProduct(long id, ProductOutDTO productOutDTO) {
+    public ApiResp<ProductDTO> outProduct(long id, ProductOutputRequestDTO productOutDTO) {
         try {
             ProductModel product = productRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException("Producto con id: " + id + " no encontrado"));
 
-            if (product.getCantidadDisponible() < productOutDTO.cantidadRetirada()) {
+            if (product.getAvailableQuantity() < productOutDTO.withdrawnQuantity()) {
                 return ApiResp.error("No hay suficiente inventario disponible. Cantidad actual: "
-                        + product.getCantidadDisponible());
+                        + product.getAvailableQuantity());
             }
 
-            product.setCantidadRetirada(productOutDTO.cantidadRetirada());
-            product.setMotivoRetiro(productOutDTO.motivoRetiro());
-            product.setCantidadDisponible(product.getCantidadDisponible() - productOutDTO.cantidadRetirada());
+            product.setWithdrawnQuantity(productOutDTO.withdrawnQuantity());
+            product.setRetirementReason(productOutDTO.retirementReason());
+            product.setAvailableQuantity(product.getAvailableQuantity() - productOutDTO.withdrawnQuantity());
 
             ProductModel updatedProduct = productRepository.save(product);
             return ApiResp.success(
