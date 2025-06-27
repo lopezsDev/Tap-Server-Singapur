@@ -1,8 +1,6 @@
 package com.tap.serve.singapur.dto;
 
 import com.tap.serve.singapur.enums.RolEnum;
-import com.tap.serve.singapur.model.PermissionModel;
-
 import java.util.Set;
 
 public record SignupRequestDTO(
@@ -11,6 +9,6 @@ public record SignupRequestDTO(
         String name,
         String lastname,
         RolEnum rol,
-        Set<PermissionModel> permissions
+        Set<Long> permissions
 ) {
 }

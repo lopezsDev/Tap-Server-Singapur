@@ -14,5 +14,5 @@ public interface PermissionRepository extends JpaRepository<PermissionModel, Lon
 
     Optional<PermissionModel> findByPermissionName(PermissionEnum perm);
 
-    Set<PermissionModel> findAllByIdIn(List<Long> list);
+    List<PermissionModel> findAllById(Iterable<Long> ids);
 }

@@ -12,15 +12,16 @@ import com.tap.serve.singapur.model.UserModel;
 import com.tap.serve.singapur.repository.PermissionRepository;
 import com.tap.serve.singapur.repository.RolRepository;
 import com.tap.serve.singapur.repository.UserRepository;
+import com.tap.serve.singapur.utils.error.BadRequestException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -51,14 +52,13 @@ public class AuthService {
     }
 
     @Transactional
-    public SignupResponseDTO signup(SignupRequestDTO signupRequest) throws BadRequestException {
+    public SignupResponseDTO signup(SignupRequestDTO signupRequest) {
         if (userRepository.existsByUsername(signupRequest.username())) {
             throw new BadRequestException("El nombre de usuario ya está en uso");
         }
 
-        // Crear o encontrar el rol
-        RolModel rol = rolRepository.findByRol(signupRequest.rol())
-                .orElseGet(() -> createRolWithPermissions(signupRequest.rol(), signupRequest.permissions()));
+        // Obtener o crear el rol con los permisos especificados
+        RolModel rol = getOrCreateRolWithPermissions(signupRequest.rol(), signupRequest.permissions());
 
         // Crear el usuario
         UserModel user = new UserModel();
@@ -77,16 +77,48 @@ public class AuthService {
         return new SignupResponseDTO("Usuario registrado exitosamente");
     }
 
-    private RolModel createRolWithPermissions(RolEnum rolEnum, Set<PermissionModel> permissions) {
-        RolModel rol = new RolModel();
-        rol.setRol(rolEnum);
+    private RolModel getOrCreateRolWithPermissions(RolEnum rolEnum, Set<Long> permissionIds) {
+        // Buscar si ya existe un rol con este enum
+        return rolRepository.findByRol(rolEnum)
+                .map(existingRol -> updateRolPermissions(existingRol, permissionIds))
+                .orElseGet(() -> createNewRolWithPermissions(rolEnum, permissionIds));
+    }
 
-        // Validar que los permisos existen
-        Set<PermissionModel> validPermissions = permissionRepository.findAllByIdIn(
-                permissions.stream().map(PermissionModel::getId).toList()
-        );
+    private RolModel updateRolPermissions(RolModel existingRol, Set<Long> permissionIds) {
+        if (permissionIds != null && !permissionIds.isEmpty()) {
+            // Obtener los permisos de la base de datos (entidades gestionadas)
+            Set<PermissionModel> permissions = permissionRepository.findAllById(permissionIds)
+                    .stream()
+                    .collect(Collectors.toSet());
 
-        rol.setPermissionsList(validPermissions);
-        return rolRepository.save(rol);
+            if (permissions.size() != permissionIds.size()) {
+                throw new BadRequestException("Uno o más permisos no existen");
+            }
+
+            // Actualizar los permisos del rol existente
+            existingRol.getPermissionsList().clear();
+            existingRol.getPermissionsList().addAll(permissions);
+            return rolRepository.save(existingRol);
+        }
+        return existingRol;
+    }
+
+    private RolModel createNewRolWithPermissions(RolEnum rolEnum, Set<Long> permissionIds) {
+        RolModel newRol = new RolModel();
+        newRol.setRol(rolEnum);
+
+        if (permissionIds != null && !permissionIds.isEmpty()) {
+            // Obtener los permisos de la base de datos (entidades gestionadas)
+            Set<PermissionModel> permissions = permissionRepository.findAllById(permissionIds)
+                    .stream()
+                    .collect(Collectors.toSet());
+
+            if (permissions.size() != permissionIds.size()) {
+                throw new BadRequestException("Uno o más permisos no existen");
+            }
+
+            newRol.setPermissionsList(permissions);
+        }
+        return rolRepository.save(newRol);
     }
 }

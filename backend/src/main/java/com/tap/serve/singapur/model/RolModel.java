@@ -24,7 +24,7 @@ public class RolModel {
     @Enumerated(EnumType.STRING)
     private RolEnum rol;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "role_permissions", joinColumns = @JoinColumn(name = "role_id")
     ,inverseJoinColumns = @JoinColumn(name = "permission_id"))
     private Set<PermissionModel> permissionsList = new HashSet<>();
