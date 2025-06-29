@@ -1,8 +1,14 @@
 package com.tap.serve.singapur.controller;
 
+import com.tap.serve.singapur.dto.OrderRequestDTO;
+import com.tap.serve.singapur.dto.OrderResponseDTO;
 import com.tap.serve.singapur.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/order")
@@ -12,17 +18,17 @@ public class OrderController {
     private final OrderService pedidoService;
 
     @PostMapping
-    public ResponseEntity<PedidoResponseDto> crear(@Valid @RequestBody PedidoRequestDto dto) {
-        return ResponseEntity.ok(pedidoService.crearPedido(dto));
+    public ResponseEntity<OrderResponseDTO> crear(@Valid @RequestBody OrderRequestDTO dto) {
+        return ResponseEntity.ok(pedidoService.createOrder(dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<PedidoResponseDto>> listar() {
+    public ResponseEntity<List<OrderResponseDTO>> listar() {
         return ResponseEntity.ok(pedidoService.listarPedidos());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PedidoResponseDto> obtener(@PathVariable Long id) {
+    public ResponseEntity<OrderResponseDTO> obtener(@PathVariable Long id) {
         return ResponseEntity.ok(pedidoService.obtenerPedido(id));
     }
 

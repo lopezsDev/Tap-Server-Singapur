@@ -13,7 +13,7 @@ import java.util.List;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "order")
+@Table(name = "orders")
 public class OrderModel {
 
     @Id
@@ -25,10 +25,8 @@ public class OrderModel {
     @Column(name = "fecha_pedido")
     private LocalDateTime fechaPedido = LocalDateTime.now();
 
-    @ManyToMany
-    @JoinTable(
-            name = "product_order",
-            joinColumns = @JoinColumn(name = "order_id"),
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = "product_order", joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<ProductModel> products;
