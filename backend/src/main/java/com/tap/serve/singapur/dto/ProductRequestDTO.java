@@ -18,15 +18,15 @@ public record ProductRequestDTO(
         Double price,
 
         @NotNull(message = "Debe indicar si el producto está disponile o no.")
-        ProductStatus estado,
+        ProductStatus productStatus,
 
         @Min(value = 0, message = "La cantidad crítica no puede ser negativa.")
-        int cantidadCritica,
+        int criticalQuantity,
 
         @Min(value = 0, message = "La cantidad disponible no puede ser negativa.")
-        int cantidadDisponible,
+        int availableQuantity,
 
         @NotNull(message = "Debe indicar la categoría del producto.")
-        Long categoryId
+        String category
 ) {
 }

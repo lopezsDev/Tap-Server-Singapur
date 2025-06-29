@@ -1,5 +1,6 @@
 package com.tap.serve.singapur.mapper;
 
+import com.tap.serve.singapur.dto.ProductRequestDTO;
 import com.tap.serve.singapur.dto.ProductResponseDTO;
 import com.tap.serve.singapur.model.CategoryModel;
 import com.tap.serve.singapur.model.ProductModel;
@@ -16,12 +17,11 @@ public class ProductMapper {
         this.categoryRepository = categoryRepository;
     }
 
-    public ProductModel toModel(ProductResponseDTO dto) {
+    public ProductModel toModel(ProductRequestDTO dto) {
         CategoryModel category = categoryRepository.findByName(dto.category())
                 .orElseThrow(() -> new EntityNotFoundException("Categoría no encontrada: " + dto.category()));
 
         ProductModel model = new ProductModel();
-        model.setId(dto.id());
         model.setName(dto.name());
         model.setDescription(dto.description());
         model.setPrice(dto.price());
@@ -44,5 +44,14 @@ public class ProductMapper {
                 model.getAvailableQuantity(),
                 model.getCategory().getName()
         );
+    }
+
+    public void updateModelFromDTO(ProductRequestDTO dto, ProductModel model) {
+        model.setName(dto.name());
+        model.setDescription(dto.description());
+        model.setPrice(dto.price());
+        model.setEstatus(dto.productStatus());
+        model.setCriticalQuantity(dto.criticalQuantity());
+        model.setAvailableQuantity(dto.availableQuantity());
     }
 }

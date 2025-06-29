@@ -1,5 +1,6 @@
 package com.tap.serve.singapur.controller;
 
+import com.tap.serve.singapur.dto.ProductRequestDTO;
 import com.tap.serve.singapur.utils.ApiResp;
 import com.tap.serve.singapur.dto.ProductResponseDTO;
 import com.tap.serve.singapur.dto.ProductOutputRequestDTO;
@@ -32,10 +33,10 @@ public class ProductController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list")
     })
-    @PreAuthorize("hasAuthority('PERMISSION_READ') and hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('PERMISSION_READ')")
     @GetMapping
-    public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
-        return ResponseEntity.ok(productService.findAll());
+    public ResponseEntity<ApiResp<List<ProductResponseDTO>>> getAllProducts() {
+        return ResponseEntity.ok(ApiResp.success("Productos encontrados", productService.findAll()));
     }
 
     @Operation(summary = "Get product by ID", description = "Retrieve a product by its ID.")
@@ -44,9 +45,10 @@ public class ProductController {
                     content = @Content(schema = @Schema(implementation = ProductModel.class))),
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
+    @PreAuthorize("hasAuthority('PERMISSION_READ')")
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable long id) {
-        return ResponseEntity.ok(productService.findById(id));
+    public ResponseEntity<ApiResp<ProductResponseDTO>> getProductById(@PathVariable long id) {
+        return ResponseEntity.ok(ApiResp.success("Producto encontrado", productService.findById(id)));
     }
 
     @Operation(summary = "Create a new product", description = "Add a new product to the database.")
@@ -54,14 +56,12 @@ public class ProductController {
             @ApiResponse(responseCode = "201", description = "Product created",
                     content = @Content(schema = @Schema(implementation = ProductModel.class)))
     })
+    @PreAuthorize("hasAuthority('PERMISSION_CREATE') or hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody ProductResponseDTO productDTO) {
-        try {
-            ProductResponseDTO savedProduct = productService.save(productDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
-        } catch (EntityNotFoundException | IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
+    public ResponseEntity<ApiResp<ProductResponseDTO>> createProduct(@RequestBody ProductRequestDTO productDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResp.success("Producto creado correctamente",
+                        productService.create(productDTO)));
     }
 
     @Operation(summary = "Update an existing product", description = "Update the details of an existing product.")
@@ -70,19 +70,10 @@ public class ProductController {
                     content = @Content(schema = @Schema(implementation = ProductModel.class))),
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
-    public ResponseEntity<ProductResponseDTO> updateProduct(@PathVariable long id, @RequestBody ProductResponseDTO productDTO) {
-
-        ProductResponseDTO updatedDTO = new ProductResponseDTO(
-                id,
-                productDTO.name(),
-                productDTO.description(),
-                productDTO.price(),
-                productDTO.productStatus(),
-                productDTO.criticalQuantity(),
-                productDTO.availableQuantity(),
-                productDTO.category()
-        );
-        return ResponseEntity.ok(productService.save(updatedDTO));
+    @PreAuthorize("hasAuthority('PERMISSION_UPDATE') or hasRole('ADMIN')")
+    public ResponseEntity<ApiResp<ProductResponseDTO>> updateProduct(@PathVariable long id, @RequestBody ProductRequestDTO productDTO) {
+        return ResponseEntity.ok(ApiResp.success("Producto actualizado correctamente",
+                productService.update(id, productDTO)));
     }
 
     @Operation(summary = "Delete a product", description = "Delete a product by its ID.")
@@ -90,10 +81,11 @@ public class ProductController {
             @ApiResponse(responseCode = "204", description = "Product deleted"),
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
+    public ResponseEntity<ApiResp<Void>> deleteProduct(@PathVariable long id) {
         productService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResp.success("Producto eliminido exitosamente", null));
     }
 
     @Operation(summary = "Generate exception on product", description = "Exception on product by its ID.")
@@ -101,14 +93,10 @@ public class ProductController {
             @ApiResponse(responseCode = "204", description = "Product exception added"),
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
+    @PreAuthorize("hasRole('ADMINy')")
     @PutMapping("/outputproduct/{id}")
-    public ResponseEntity<ApiResp<ProductResponseDTO>> outProduct(
-            @PathVariable long id,
-            @RequestBody ProductOutputRequestDTO productOutDTO
-    ) {
-        ApiResp<ProductResponseDTO> response = productService.outProduct(id, productOutDTO);
-        return response.status().equals("SUCCESS")
-                ? ResponseEntity.ok(response)
-                : ResponseEntity.badRequest().body(response);
+    public ResponseEntity<ApiResp<ProductResponseDTO>> outProduct(@PathVariable long id, @RequestBody ProductOutputRequestDTO productOutDTO){
+        return ResponseEntity.ok(ApiResp.success("Producto encontrado",
+                productService.outProduct(id, productOutDTO)));
     }
 }

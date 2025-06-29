@@ -1,5 +1,6 @@
 package com.tap.serve.singapur.service;
 
+import com.tap.serve.singapur.dto.ProductRequestDTO;
 import com.tap.serve.singapur.utils.ApiResp;
 import com.tap.serve.singapur.dto.ProductResponseDTO;
 import com.tap.serve.singapur.dto.ProductOutputRequestDTO;
@@ -34,27 +35,34 @@ public class ProductService {
     }
 
     public ProductResponseDTO findById(long id) {
-        ProductModel product = productRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Producto con el id: " + id + " no encontrado"));
+        return productMapper.toDTO(
+                productRepository.findById(id)
+                        .orElseThrow(() -> new EntityNotFoundException("Producto con ID " + id + " no encontrado"))
+        );
 
-        return productMapper.toDTO(product);
     }
 
-    public ProductResponseDTO save(ProductResponseDTO productDTO) {
+    public ProductResponseDTO create(ProductRequestDTO productDTO) {
 
-        ProductModel productModel = productMapper.toModel(productDTO);
+        CategoryModel category = categoryRepository.findByName(productDTO.category())
+                .orElseThrow(() -> new EntityNotFoundException("Categoría "+ productDTO.category() +" no encontrada con ID: "));
 
-        if (productModel.getCategory() == null || productModel.getCategory().getId() == null) {
-            throw new IllegalArgumentException("Debe especificar una categoría válida");
-        }
+        ProductModel model = productMapper.toModel(productDTO);
+                model.setCategory(category);
+                return productMapper.toDTO(productRepository.save(model));
+    }
 
-        CategoryModel category = categoryRepository.findById(productModel.getCategory().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Categoría no encontrada con ID: " +
-                        productModel.getCategory().getId()));
+    public ProductResponseDTO update(long id, ProductRequestDTO productDTO) {
+        ProductModel existing = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Producto con ID " + id + " no encontrado"));
 
-        productModel.setCategory(category);
+        CategoryModel category = categoryRepository.findByName(productDTO.category())
+                .orElseThrow(()-> new EntityNotFoundException("Categoría "+ productDTO.category() +" no encontrado"));
 
-        return productMapper.toDTO(productRepository.save(productModel));
+        productMapper.updateModelFromDTO(productDTO, existing);
+        existing.setCategory(category);
+
+        return productMapper.toDTO(productRepository.save(existing));
     }
 
     public void deleteById(long id) {
@@ -64,13 +72,13 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public ApiResp<ProductResponseDTO> outProduct(long id, ProductOutputRequestDTO productOutDTO) {
-        try {
+    public ProductResponseDTO outProduct(long id, ProductOutputRequestDTO productOutDTO) {
+
             ProductModel product = productRepository.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException("Producto con id: " + id + " no encontrado"));
 
             if (product.getAvailableQuantity() < productOutDTO.withdrawnQuantity()) {
-                return ApiResp.error("No hay suficiente inventario disponible. Cantidad actual: "
+                throw new IllegalArgumentException("No hay suficiente inventario disponible. Cantidad actual: "
                         + product.getAvailableQuantity());
             }
 
@@ -78,16 +86,8 @@ public class ProductService {
             product.setRetirementReason(productOutDTO.retirementReason());
             product.setAvailableQuantity(product.getAvailableQuantity() - productOutDTO.withdrawnQuantity());
 
-            ProductModel updatedProduct = productRepository.save(product);
-            return ApiResp.success(
-                    "Retiro de inventario realizado exitosamente",
-                    productMapper.toDTO(updatedProduct)
-            );
-        } catch (EntityNotFoundException e) {
-            return ApiResp.error(e.getMessage());
-        } catch (Exception e) {
-            return ApiResp.error("Error al realizar el retiro: " + e.getMessage());
-        }
+            return productMapper.toDTO(productRepository.save(product));
+
     }
 }
 
