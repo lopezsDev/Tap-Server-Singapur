@@ -30,4 +30,8 @@ public class OrderModel {
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<ProductModel> products;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderDetailModel> details;
+
 }
