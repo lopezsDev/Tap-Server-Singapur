@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,7 +59,7 @@ public class ProductController {
     })
     @PreAuthorize("hasAuthority('PERMISSION_CREATE') or hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<ApiResp<ProductResponseDTO>> createProduct(@RequestBody ProductRequestDTO productDTO) {
+    public ResponseEntity<ApiResp<ProductResponseDTO>> createProduct(@Valid @RequestBody ProductRequestDTO productDTO) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResp.success("Producto creado correctamente",
                         productService.create(productDTO)));
@@ -71,7 +72,7 @@ public class ProductController {
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
     @PreAuthorize("hasAuthority('PERMISSION_UPDATE') or hasRole('ADMIN')")
-    public ResponseEntity<ApiResp<ProductResponseDTO>> updateProduct(@PathVariable long id, @RequestBody ProductRequestDTO productDTO) {
+    public ResponseEntity<ApiResp<ProductResponseDTO>> updateProduct(@PathVariable long id, @Valid @RequestBody ProductRequestDTO productDTO) {
         return ResponseEntity.ok(ApiResp.success("Producto actualizado correctamente",
                 productService.update(id, productDTO)));
     }
@@ -95,7 +96,7 @@ public class ProductController {
     })
     @PreAuthorize("hasRole('ADMINy')")
     @PutMapping("/outputproduct/{id}")
-    public ResponseEntity<ApiResp<ProductResponseDTO>> outProduct(@PathVariable long id, @RequestBody ProductOutputRequestDTO productOutDTO){
+    public ResponseEntity<ApiResp<ProductResponseDTO>> outProduct(@PathVariable long id, @Valid @RequestBody ProductOutputRequestDTO productOutDTO){
         return ResponseEntity.ok(ApiResp.success("Producto encontrado",
                 productService.outProduct(id, productOutDTO)));
     }

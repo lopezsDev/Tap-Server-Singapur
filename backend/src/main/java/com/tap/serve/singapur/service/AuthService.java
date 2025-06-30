@@ -12,7 +12,8 @@ import com.tap.serve.singapur.model.UserModel;
 import com.tap.serve.singapur.repository.PermissionRepository;
 import com.tap.serve.singapur.repository.RolRepository;
 import com.tap.serve.singapur.repository.UserRepository;
-import com.tap.serve.singapur.utils.exception.BadRequestException;
+import com.tap.serve.singapur.utils.exception.PermissionNotFoundException;
+import com.tap.serve.singapur.utils.exception.UsernameAlreadyExistsException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -50,11 +51,10 @@ public class AuthService {
                 loginRequest.username()
         );
     }
-
     @Transactional
     public SignupResponseDTO signup(SignupRequestDTO signupRequest) {
         if (userRepository.existsByUsername(signupRequest.username())) {
-            throw new BadRequestException("El nombre de usuario ya está en uso");
+            throw new UsernameAlreadyExistsException("El nombre de usuario ya está en uso");
         }
 
         // Obtener o crear el rol con los permisos especificados
@@ -92,7 +92,7 @@ public class AuthService {
                     .collect(Collectors.toSet());
 
             if (permissions.size() != permissionIds.size()) {
-                throw new BadRequestException("Uno o más permisos no existen");
+                throw new PermissionNotFoundException("Uno o más permisos no existen");
             }
 
             // Actualizar los permisos del rol existente
@@ -114,7 +114,7 @@ public class AuthService {
                     .collect(Collectors.toSet());
 
             if (permissions.size() != permissionIds.size()) {
-                throw new BadRequestException("Uno o más permisos no existen");
+                throw new PermissionNotFoundException("Uno o más permisos no existen");
             }
 
             newRol.setPermissionsList(permissions);

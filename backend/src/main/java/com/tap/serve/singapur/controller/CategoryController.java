@@ -1,14 +1,19 @@
 package com.tap.serve.singapur.controller;
 
+import com.tap.serve.singapur.dto.CategoryRequestDTO;
+import com.tap.serve.singapur.dto.CategoryResponseDTO;
 import com.tap.serve.singapur.model.CategoryModel;
 import com.tap.serve.singapur.service.CategoryService;
+import com.tap.serve.singapur.utils.ApiResp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,9 +32,11 @@ public class CategoryController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list")
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<List<CategoryModel>> getAllCategories() {
-        return ResponseEntity.ok(categoryService.findAll());
+    public ResponseEntity<ApiResp<List<CategoryResponseDTO>>> getAllCategories() {
+        return ResponseEntity.ok(ApiResp.success("Categorías disponibles",
+                categoryService.findAll()));
     }
 
     @Operation(summary = "Get category by ID", description = "Retrieve a category by its ID.")
@@ -38,9 +45,10 @@ public class CategoryController {
                     content = @Content(schema = @Schema(implementation = CategoryModel.class))),
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryModel> getCategoryById(@PathVariable long id) {
-        return ResponseEntity.ok(categoryService.findById(id));
+    public ResponseEntity<ApiResp<CategoryResponseDTO>> getCategoryById(@PathVariable long id) {
+        return ResponseEntity.ok(ApiResp.success("Categoría encontrada", categoryService.findById(id)));
     }
 
     @Operation(summary = "Create a new category", description = "Add a new category to the database.")
@@ -48,10 +56,12 @@ public class CategoryController {
             @ApiResponse(responseCode = "201", description = "Category created",
                     content = @Content(schema = @Schema(implementation = CategoryModel.class)))
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<CategoryModel> createCategory(@RequestBody CategoryModel categoryModel) {
-        CategoryModel savedCategory = categoryService.save(categoryModel);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
+    public ResponseEntity<ApiResp<CategoryResponseDTO>> createCategory(@Valid @RequestBody CategoryRequestDTO categoryRequestDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResp.success("Categoría creada exitosamente",
+                        categoryService.create(categoryRequestDTO)));
     }
 
     @Operation(summary = "Update an existing category", description = "Update the details of an existing category.")
@@ -60,10 +70,12 @@ public class CategoryController {
                     content = @Content(schema = @Schema(implementation = CategoryModel.class))),
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryModel> updateCategory(@PathVariable long id, @RequestBody CategoryModel categoryModel) {
-        categoryModel.setId(id);
-        return ResponseEntity.ok(categoryService.save(categoryModel));
+    public ResponseEntity<ApiResp<CategoryResponseDTO>> updateCategory(@PathVariable long id, @Valid @RequestBody CategoryRequestDTO categoryRequestDTO) {
+        return ResponseEntity
+                .ok(ApiResp.success("Categoría actualizada exitosamente",
+                        categoryService.update(id, categoryRequestDTO)));
     }
 
     @Operation(summary = "Delete a category", description = "Delete a category by its ID.")
@@ -72,18 +84,9 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable long id) {
+    public ResponseEntity<ApiResp<Void>> deleteCategory(@PathVariable long id) {
         categoryService.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/saludo")
-    public String saludo() {
-        return "Hello World!";
-    }
-
-    @GetMapping("/saludo-jefe")
-    public String saludoJefe() {
-        return "El jefe es un puto!";
+        return ResponseEntity
+                .ok(ApiResp.success("Categoría elimina exitosamente", null));
     }
 }

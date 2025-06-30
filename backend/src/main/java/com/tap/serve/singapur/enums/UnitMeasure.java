@@ -1,11 +1,18 @@
 package com.tap.serve.singapur.enums;
 
-public enum UnitMeasure {
-    Ml,
-    Oz,
-    L,
-    taza,
-    Kg,
-    G
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@Getter
+@RequiredArgsConstructor
+public enum UnitMeasure {
+    ML("Mililitros"),
+    OZ("Onzas"),
+    L("Litros"),
+    TAZA("Taza"),
+    KG("Kilogramos"),
+    G("Gramos");
+
+    private final String label;
 }
+

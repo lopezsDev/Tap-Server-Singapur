@@ -31,17 +31,17 @@ public class OrderService {
         return toDto(saved);
     }
 
-    public List<OrderResponseDTO> listarPedidos() {
+    public List<OrderResponseDTO> findAllOrders() {
         return orderRepository.findAll().stream().map(this::toDto).collect(Collectors.toList());
     }
 
-    public OrderResponseDTO obtenerPedido(Long id) {
+    public OrderResponseDTO findById(Long id) {
         OrderModel order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
         return toDto(order);
     }
 
-    public void eliminarPedido(Long id) {
+    public void delete(Long id) {
         if (!orderRepository.existsById(id)) {
             throw new RuntimeException("Pedido no encontrado para eliminar");
         }

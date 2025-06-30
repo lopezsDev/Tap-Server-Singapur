@@ -24,17 +24,17 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<OrderResponseDTO>> listar() {
-        return ResponseEntity.ok(pedidoService.listarPedidos());
+        return ResponseEntity.ok(pedidoService.findAllOrders());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<OrderResponseDTO> obtener(@PathVariable Long id) {
-        return ResponseEntity.ok(pedidoService.obtenerPedido(id));
+        return ResponseEntity.ok(pedidoService.findById(id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        pedidoService.eliminarPedido(id);
+        pedidoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

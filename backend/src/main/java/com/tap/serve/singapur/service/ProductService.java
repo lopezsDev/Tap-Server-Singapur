@@ -9,6 +9,8 @@ import com.tap.serve.singapur.model.CategoryModel;
 import com.tap.serve.singapur.model.ProductModel;
 import com.tap.serve.singapur.repository.CategoryRepository;
 import com.tap.serve.singapur.repository.ProductRepository;
+import com.tap.serve.singapur.utils.exception.CategoryNotFoundException;
+import com.tap.serve.singapur.utils.exception.ProductNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +39,7 @@ public class ProductService {
     public ProductResponseDTO findById(long id) {
         return productMapper.toDTO(
                 productRepository.findById(id)
-                        .orElseThrow(() -> new EntityNotFoundException("Producto con ID " + id + " no encontrado"))
+                        .orElseThrow(() -> new ProductNotFoundException("Producto con ID " + id + " no encontrado"))
         );
 
     }
@@ -45,7 +47,7 @@ public class ProductService {
     public ProductResponseDTO create(ProductRequestDTO productDTO) {
 
         CategoryModel category = categoryRepository.findByName(productDTO.category())
-                .orElseThrow(() -> new EntityNotFoundException("Categoría "+ productDTO.category() +" no encontrada con ID: "));
+                .orElseThrow(() -> new CategoryNotFoundException("Categoría "+ productDTO.category() +" no encontrada con ID: "));
 
         ProductModel model = productMapper.toModel(productDTO);
                 model.setCategory(category);
@@ -54,10 +56,10 @@ public class ProductService {
 
     public ProductResponseDTO update(long id, ProductRequestDTO productDTO) {
         ProductModel existing = productRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Producto con ID " + id + " no encontrado"));
+                .orElseThrow(() -> new ProductNotFoundException("Producto con ID " + id + " no encontrado"));
 
         CategoryModel category = categoryRepository.findByName(productDTO.category())
-                .orElseThrow(()-> new EntityNotFoundException("Categoría "+ productDTO.category() +" no encontrado"));
+                .orElseThrow(()-> new CategoryNotFoundException("Categoría "+ productDTO.category() +" no encontrado"));
 
         productMapper.updateModelFromDTO(productDTO, existing);
         existing.setCategory(category);
@@ -67,7 +69,7 @@ public class ProductService {
 
     public void deleteById(long id) {
         if (!productRepository.existsById(id)) {
-            throw new EntityNotFoundException("Producto con el id: " + id + " no encontrado");
+            throw new ProductNotFoundException("Producto con el id: " + id + " no encontrado");
         }
         productRepository.deleteById(id);
     }
@@ -75,7 +77,7 @@ public class ProductService {
     public ProductResponseDTO outProduct(long id, ProductOutputRequestDTO productOutDTO) {
 
             ProductModel product = productRepository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException("Producto con id: " + id + " no encontrado"));
+                    .orElseThrow(() -> new ProductNotFoundException("Producto con id: " + id + " no encontrado"));
 
             if (product.getAvailableQuantity() < productOutDTO.withdrawnQuantity()) {
                 throw new IllegalArgumentException("No hay suficiente inventario disponible. Cantidad actual: "
