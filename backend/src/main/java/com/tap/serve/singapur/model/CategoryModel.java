@@ -22,7 +22,7 @@ public class CategoryModel {
 
     private String description;
 
-    @Column(name = "unit_measure",  unique = true, nullable = false, updatable = true)
+    @Column(name = "unit_measure",  unique = false, nullable = false, updatable = true)
     @Enumerated(EnumType.STRING)
     private UnitMeasure unitOfMeasure;
 

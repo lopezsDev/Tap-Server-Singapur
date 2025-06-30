@@ -57,7 +57,7 @@ public class ProductController {
             @ApiResponse(responseCode = "201", description = "Product created",
                     content = @Content(schema = @Schema(implementation = ProductModel.class)))
     })
-    @PreAuthorize("hasAuthority('PERMISSION_CREATE') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('PERMISSION_CREATE')")
     @PostMapping
     public ResponseEntity<ApiResp<ProductResponseDTO>> createProduct(@Valid @RequestBody ProductRequestDTO productDTO) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -71,7 +71,7 @@ public class ProductController {
                     content = @Content(schema = @Schema(implementation = ProductModel.class))),
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
-    @PreAuthorize("hasAuthority('PERMISSION_UPDATE') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('PERMISSION_UPDATE') and hasRole('ADMIN')")
     public ResponseEntity<ApiResp<ProductResponseDTO>> updateProduct(@PathVariable long id, @Valid @RequestBody ProductRequestDTO productDTO) {
         return ResponseEntity.ok(ApiResp.success("Producto actualizado correctamente",
                 productService.update(id, productDTO)));
@@ -82,7 +82,7 @@ public class ProductController {
             @ApiResponse(responseCode = "204", description = "Product deleted"),
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('PERMISSION_DELETE')")
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResp<Void>> deleteProduct(@PathVariable long id) {
         productService.deleteById(id);
@@ -94,7 +94,7 @@ public class ProductController {
             @ApiResponse(responseCode = "204", description = "Product exception added"),
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
-    @PreAuthorize("hasRole('ADMINy')")
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('PERMISSION_UPDATE')")
     @PutMapping("/outputproduct/{id}")
     public ResponseEntity<ApiResp<ProductResponseDTO>> outProduct(@PathVariable long id, @Valid @RequestBody ProductOutputRequestDTO productOutDTO){
         return ResponseEntity.ok(ApiResp.success("Producto encontrado",

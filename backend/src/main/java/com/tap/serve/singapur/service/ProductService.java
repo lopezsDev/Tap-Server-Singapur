@@ -10,6 +10,7 @@ import com.tap.serve.singapur.model.ProductModel;
 import com.tap.serve.singapur.repository.CategoryRepository;
 import com.tap.serve.singapur.repository.ProductRepository;
 import com.tap.serve.singapur.utils.exception.CategoryNotFoundException;
+import com.tap.serve.singapur.utils.exception.InsufficientInventoryException;
 import com.tap.serve.singapur.utils.exception.ProductNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,7 @@ public class ProductService {
     public ProductResponseDTO create(ProductRequestDTO productDTO) {
 
         CategoryModel category = categoryRepository.findByName(productDTO.category())
-                .orElseThrow(() -> new CategoryNotFoundException("Categoría "+ productDTO.category() +" no encontrada con ID: "));
+                .orElseThrow(() -> new CategoryNotFoundException("Categoría "+ productDTO.category() +" no encontrada"));
 
         ProductModel model = productMapper.toModel(productDTO);
                 model.setCategory(category);
@@ -80,7 +81,7 @@ public class ProductService {
                     .orElseThrow(() -> new ProductNotFoundException("Producto con id: " + id + " no encontrado"));
 
             if (product.getAvailableQuantity() < productOutDTO.withdrawnQuantity()) {
-                throw new IllegalArgumentException("No hay suficiente inventario disponible. Cantidad actual: "
+                throw new InsufficientInventoryException("No hay suficiente inventario disponible. Cantidad actual: "
                         + product.getAvailableQuantity());
             }
 

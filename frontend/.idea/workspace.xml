@@ -5,13 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a2045705-908b-43b7-b6db-e83ac99812e5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/ProductDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/mapper/ProductMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/config/CorsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/config/CorsConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/OrderItemRequestDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/mapper/OrderMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/utils/exception/InsufficientInventoryException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/utils/exception/OrderNotFoundException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/controller/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/controller/CategoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/controller/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/controller/OrderController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/controller/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/controller/ProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/CategoryRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/CategoryRequestDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/OrderRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/OrderRequestDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/OrderResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/OrderResponseDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/ProductOutputRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/ProductOutputRequestDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/SimpleProductDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/SimpleProductDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/model/CategoryModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/model/CategoryModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/model/ProductModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/model/ProductModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/service/OrderService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/service/ProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/service/ProductService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/utils/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/utils/exception/GlobalExceptionHandler.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,6 +30,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "lopezsDev"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/lopezsDev/Tap-Server-Singapur.git",
+    "accountId": "7ee305e8-aded-456a-b9d5-b4c5552c88a7"
+  }
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
@@ -32,9 +53,11 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/samir/Documents/Desarrollo/Java/Web/Monolitos/singapur/frontend",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/User/Documents/Desarrollo/Tap-Server-Singapur/frontend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -55,7 +78,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.18034.50" />
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.26574.91" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.26574.91" />
       </set>
     </attachedChunks>
   </component>
@@ -71,6 +95,7 @@
       <workItem from="1731775350593" duration="742000" />
       <workItem from="1732251338615" duration="14000" />
       <workItem from="1732254720380" duration="4887000" />
+      <workItem from="1751323154718" duration="601000" />
     </task>
     <servers />
   </component>

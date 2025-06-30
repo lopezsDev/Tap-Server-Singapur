@@ -4,6 +4,7 @@ import com.tap.serve.singapur.utils.ApiResp;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -66,6 +67,28 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(ApiResp.error(ex.getMessage()));
+    }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<ApiResp<Void>> handleOrderNotFound(OrderNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiResp.error(ex.getMessage()));
+    }
+
+    @ExceptionHandler(InsufficientInventoryException.class)
+    public ResponseEntity<ApiResp<Void>> handleInsufficientInventory(InsufficientInventoryException ex) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ApiResp.error(ex.getMessage()));
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ApiResp<Void>> handleAuthorizationDenied(AuthorizationDeniedException ex) {
+        String message = "Acceso Denegado: No tienes permiso para realizar esta acción.";
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(ApiResp.error(message));
     }
 
     @ExceptionHandler(Exception.class)

@@ -32,7 +32,7 @@ public class CategoryController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list")
     })
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('WAITER') and hasAuthority('PERMISSION_READ')")
     @GetMapping
     public ResponseEntity<ApiResp<List<CategoryResponseDTO>>> getAllCategories() {
         return ResponseEntity.ok(ApiResp.success("Categorías disponibles",
@@ -45,7 +45,7 @@ public class CategoryController {
                     content = @Content(schema = @Schema(implementation = CategoryModel.class))),
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('WAITER') and hasAuthority('PERMISSION_READ')")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResp<CategoryResponseDTO>> getCategoryById(@PathVariable long id) {
         return ResponseEntity.ok(ApiResp.success("Categoría encontrada", categoryService.findById(id)));
@@ -56,7 +56,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "201", description = "Category created",
                     content = @Content(schema = @Schema(implementation = CategoryModel.class)))
     })
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('PERMISSION_CREATE')")
     @PostMapping
     public ResponseEntity<ApiResp<CategoryResponseDTO>> createCategory(@Valid @RequestBody CategoryRequestDTO categoryRequestDTO) {
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -70,7 +70,7 @@ public class CategoryController {
                     content = @Content(schema = @Schema(implementation = CategoryModel.class))),
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('PERMISSION_UPDATE')")
     @PutMapping("/{id}")
     public ResponseEntity<ApiResp<CategoryResponseDTO>> updateCategory(@PathVariable long id, @Valid @RequestBody CategoryRequestDTO categoryRequestDTO) {
         return ResponseEntity
@@ -83,6 +83,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "204", description = "Category deleted"),
             @ApiResponse(responseCode = "404", description = "Category not found")
     })
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('PERMISSION_DELETE')")
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResp<Void>> deleteCategory(@PathVariable long id) {
         categoryService.deleteById(id);
