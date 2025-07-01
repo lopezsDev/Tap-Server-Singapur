@@ -41,7 +41,7 @@ public class UserModel {
     @Column(name = "is_credentials_non_expired")
     private boolean isCredentialsNonExpired;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "rol_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "rol_id", nullable = false)
     private RolModel rol;
 }

@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(maxAge = 3600)
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -73,6 +72,7 @@ public class ProductController {
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
     @PreAuthorize("hasAuthority('PERMISSION_UPDATE') and hasRole('ADMIN')")
+    @PutMapping("/{id}")
     public ResponseEntity<ApiResp<ProductResponseDTO>> updateProduct(@PathVariable long id, @Valid @RequestBody ProductRequestDTO productDTO) {
         return ResponseEntity.ok(ApiResp.success("Producto actualizado correctamente",
                 productService.update(id, productDTO)));
