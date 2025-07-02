@@ -1,6 +1,7 @@
 package com.tap.serve.singapur.controller;
 
 import com.tap.serve.singapur.dto.ProductRequestDTO;
+import com.tap.serve.singapur.dto.ProductSearchDTO;
 import com.tap.serve.singapur.utils.ApiResp;
 import com.tap.serve.singapur.dto.ProductResponseDTO;
 import com.tap.serve.singapur.dto.ProductOutputRequestDTO;
@@ -96,9 +97,16 @@ public class ProductController {
             @ApiResponse(responseCode = "404", description = "Product not found")
     })
     @PreAuthorize("hasRole('ADMIN') and hasAuthority('PERMISSION_UPDATE')")
-    @PutMapping("/outputproduct/{id}")
+    @PutMapping("/output-product/{id}")
     public ResponseEntity<ApiResp<ProductResponseDTO>> outProduct(@PathVariable long id, @Valid @RequestBody ProductOutputRequestDTO productOutDTO){
         return ResponseEntity.ok(ApiResp.success("Producto encontrado",
                 productService.outProduct(id, productOutDTO)));
+    }
+
+    @PreAuthorize("hasAuthority('PERMISSION_READ')")
+    @GetMapping("/search")
+    public ResponseEntity<ApiResp<List<ProductResponseDTO>>> search(@Valid @ModelAttribute ProductSearchDTO searchDTO) {
+        List<ProductResponseDTO> results = productService.findByName(searchDTO.name());
+        return ResponseEntity.ok(ApiResp.success("Resultados", results));
     }
 }

@@ -14,7 +14,9 @@ import com.tap.serve.singapur.utils.exception.InsufficientInventoryException;
 import com.tap.serve.singapur.utils.exception.ProductNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -91,6 +93,17 @@ public class ProductService {
 
             return productMapper.toDTO(productRepository.save(product));
 
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponseDTO> findByName(String name) {
+        String sanitized = name.trim().toLowerCase();
+        if (sanitized.isEmpty()) return List.of();
+
+        List<ProductModel> products = productRepository.findByNameContainingIgnoreCase(sanitized);
+        return products.stream()
+                .map(productMapper::toDTO)
+                .toList();
     }
 }
 
