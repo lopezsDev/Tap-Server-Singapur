@@ -5,22 +5,42 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a2045705-908b-43b7-b6db-e83ac99812e5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/OrderItemRequestDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/mapper/OrderMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/utils/exception/InsufficientInventoryException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/utils/exception/OrderNotFoundException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/controller/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/controller/CategoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/controller/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/controller/OrderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/controller/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/controller/ProductController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/CategoryRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/CategoryRequestDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/OrderRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/OrderRequestDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/OrderResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/OrderResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/ProductOutputRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/ProductOutputRequestDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/SimpleProductDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/dto/SimpleProductDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/model/CategoryModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/model/CategoryModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/service/OrderService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/service/ProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/service/ProductService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/utils/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/tap/serve/singapur/utils/exception/GlobalExceptionHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/resources/application-prod.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/LayoutContent.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/login/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/signup/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/ventas/historial/[1]/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/ventas/historial/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/AddProductModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/DashboardEntry.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/DeleteProductModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/EditProductModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/InventoryActions.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Modal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/OutputProductModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Pagination.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/ProductTable.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/SearchBar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/WelcomeContent.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/pedidos/OrderConfirmModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/pedidos/OrderHistoryList.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/pedidos/OrderProductSearch.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/pedidos/OrderProductTable.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/pedidos/OrderTotalBar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/context/AuthContext.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/api.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/auth.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lib/fetchWithAuth.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/resources/application-dev.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/resources/application-dev.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/inventario/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/inventario/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/ventas/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/ventas/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,18 +50,22 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "lopezsDev"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;lopezsDev&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/lopezsDev/Tap-Server-Singapur.git",
-    "accountId": "7ee305e8-aded-456a-b9d5-b4c5552c88a7"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/lopezsDev/Tap-Server-Singapur.git&quot;,
+    &quot;accountId&quot;: &quot;7ee305e8-aded-456a-b9d5-b4c5552c88a7&quot;
   }
-}]]></component>
+}</component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
 }</component>
@@ -50,22 +74,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/User/Documents/Desarrollo/Tap-Server-Singapur/frontend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;jsx.switch.disabled&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/User/Documents/Desarrollo/Tap-Server-Singapur/frontend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\User\\Documents\\Desarrollo\\Tap-Server-Singapur\\frontend\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -74,6 +100,11 @@
         <entry key="com.intellij.reactbuddy.storybook" value="false" />
       </map>
     </option>
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\User\Documents\Desarrollo\Tap-Server-Singapur\frontend\src\components\pedidos" />
+    </key>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -95,7 +126,11 @@
       <workItem from="1731775350593" duration="742000" />
       <workItem from="1732251338615" duration="14000" />
       <workItem from="1732254720380" duration="4887000" />
-      <workItem from="1751323154718" duration="601000" />
+      <workItem from="1751323154718" duration="5837000" />
+      <workItem from="1751386877161" duration="35746000" />
+      <workItem from="1751474373162" duration="4059000" />
+      <workItem from="1751487051861" duration="1706000" />
+      <workItem from="1751493229143" duration="621000" />
     </task>
     <servers />
   </component>

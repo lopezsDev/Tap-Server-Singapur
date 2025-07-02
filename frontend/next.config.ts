@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api/:path*', // Todas las rutas que comiencen con /api/
-        destination: 'http://192.168.0.17:8080/api/:path*', // Redirige correctamente al backend
+        destination: 'http://localhost:8080/api/:path*', // Redirige correctamente al backend
       },
     ];
   },
