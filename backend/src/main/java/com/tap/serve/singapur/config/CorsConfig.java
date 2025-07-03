@@ -14,7 +14,7 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
                         .allowedOrigins("http://localhost:3000",
-                                "https://tap-server-singapur-3f3s40f9y-samir-lopezs-projects.vercel.app") // Dirección del frontend
+                                "https://tap-and-serve-singapur-backend-fabaf49f8cb8.herokuapp.com")
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("*")
                         .allowCredentials(true);
