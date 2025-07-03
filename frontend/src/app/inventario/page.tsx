@@ -24,7 +24,7 @@ export default function InventoryPage() {
         try {
             const res = await fetchProducts();
             setProducts(res.data);
-        } catch (err) {
+        } catch {
             setError("Error al cargar los productos");
         }
     };

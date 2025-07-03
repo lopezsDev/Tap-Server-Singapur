@@ -3,7 +3,14 @@
 import { deleteProduct } from '@/lib/api';
 import Modal from './Modal';
 
-export default function DeleteProductModal({ productId, onClose, onSuccess }: any) {
+interface Props {
+    productId: number;
+    onClose: () => void;
+    onSuccess: () => void;
+}
+
+export default function DeleteProductModal({ productId, onClose, onSuccess }: Props)
+ {
     const handleDelete = async () => {
         try {
             await deleteProduct(productId);

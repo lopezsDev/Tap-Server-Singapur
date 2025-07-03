@@ -36,7 +36,7 @@ export default function AddProductModal({ onClose, onSuccess }: Props) {
             await createProduct(form);
             onSuccess();
             onClose();
-        } catch (err) {
+        } catch {
             setError('Error al crear el producto');
         }
     };

@@ -4,22 +4,41 @@ import { useState } from 'react';
 import { updateProduct } from '@/lib/api';
 import Modal from './Modal';
 
-export default function EditProductModal({ product, onClose, onSuccess }: any) {
-    const [form, setForm] = useState(product);
+interface ProductFormData {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    productStatus: 'AVAILABLE' | 'UNAVAILABLE';
+    criticalQuantity: number;
+    availableQuantity: number;
+    category: string;
+}
+
+interface Props {
+    product: ProductFormData;
+    onClose: () => void;
+    onSuccess: () => void;
+}
+
+export default function EditProductModal({ product, onClose, onSuccess }: Props) {
+    const [form, setForm] = useState<ProductFormData>(product);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+
+        // Convertimos los valores numéricos a number
+        const parsedValue = ['price', 'criticalQuantity', 'availableQuantity'].includes(name)
+            ? Number(value)
+            : value;
+
+        setForm({ ...form, [name]: parsedValue });
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            await updateProduct(product.id, {
-                ...form,
-                price: +form.price,
-                criticalQuantity: +form.criticalQuantity,
-                availableQuantity: +form.availableQuantity,
-            });
+            await updateProduct(product.id, form);
             onSuccess();
             onClose();
         } catch {
@@ -42,8 +61,12 @@ export default function EditProductModal({ product, onClose, onSuccess }: any) {
                 <input name="category" value={form.category} onChange={handleChange} className="input" required />
 
                 <div className="flex justify-end gap-4 pt-2">
-                    <button type="button" className="btn-gray" onClick={onClose}>Cancelar</button>
-                    <button type="submit" className="btn-purple">Guardar</button>
+                    <button type="button" className="btn-gray" onClick={onClose}>
+                        Cancelar
+                    </button>
+                    <button type="submit" className="btn-purple">
+                        Guardar
+                    </button>
                 </div>
             </form>
         </Modal>

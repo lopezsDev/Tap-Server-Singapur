@@ -4,43 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a2045705-908b-43b7-b6db-e83ac99812e5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/resources/application-prod.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/LayoutContent.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/login/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/signup/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/ventas/historial/[1]/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/app/ventas/historial/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/AddProductModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/DashboardEntry.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/DeleteProductModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/EditProductModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/InventoryActions.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Modal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/OutputProductModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Pagination.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/ProductTable.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/SearchBar.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/WelcomeContent.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/pedidos/OrderConfirmModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/pedidos/OrderHistoryList.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/pedidos/OrderProductSearch.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/pedidos/OrderProductTable.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/pedidos/OrderTotalBar.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/context/AuthContext.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/lib/api.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/lib/auth.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/lib/fetchWithAuth.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/resources/application-dev.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/resources/application-dev.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/resources/application.properties" afterDir="false" />
+    <list default="true" id="a2045705-908b-43b7-b6db-e83ac99812e5" name="Changes" comment="add: restructure all orders module">
+      <change beforePath="$PROJECT_DIR$/../.github/workflows/main.yml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/next.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/404/page.tsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/app/inventario/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/inventario/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/ventas/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/ventas/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/AddProductModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/AddProductModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DeleteProductModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DeleteProductModal.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,11 +100,24 @@
       <workItem from="1751386877161" duration="35746000" />
       <workItem from="1751474373162" duration="4059000" />
       <workItem from="1751487051861" duration="1706000" />
-      <workItem from="1751493229143" duration="621000" />
+      <workItem from="1751493229143" duration="4161000" />
     </task>
+    <task id="LOCAL-00001" summary="add: restructure all orders module">
+      <option name="closed" value="true" />
+      <created>1751496518051</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1751496518051</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="add: restructure all orders module" />
+    <option name="LAST_COMMIT_MESSAGE" value="add: restructure all orders module" />
   </component>
 </project>
