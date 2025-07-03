@@ -14,7 +14,7 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
                         .allowedOrigins("http://localhost:3000",
-                                "https://tap-server-singapur-q10dlomu8-samir-lopezs-projects.vercel.app/")
+                                "https://tap-server-singapur-q7cxjqwvv-samir-lopezs-projects.vercel.app")
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("*")
                         .allowCredentials(true);
