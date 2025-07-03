@@ -25,6 +25,8 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -35,7 +37,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const login = async ({ username, password }: LoginCredentials) => {
         try {
-            const res = await fetch('http://localhost:8080/api/auth/login', {
+            const res = await fetch(`${BASE_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
@@ -56,7 +58,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const signup = async (payload: SignupPayload) => {
         try {
-            const res = await fetch('http://localhost:8080/api/auth/signup', {
+            const res = await fetch(`${BASE_URL}/api/auth/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
@@ -66,8 +68,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 const error = await res.json();
                 throw new Error(error.message || 'Error al registrar el usuario');
             }
-
-            // Si llega aquí, el registro fue exitoso
         } catch (error) {
             throw error;
         }

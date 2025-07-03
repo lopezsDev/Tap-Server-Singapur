@@ -1,6 +1,6 @@
-const BASE_URL = 'https://tap-and-serve-singapur-backend-fabaf49f8cb8.herokuapp.com';
-
 import { fetchWithAuth } from './fetchWithAuth';
+
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
 
 export function fetchProducts() {
     return fetchWithAuth(`${BASE_URL}/api/products`);
@@ -32,8 +32,9 @@ export function updateProduct(id: number, data: {
 }
 
 export function withdrawProduct(id: number, payload: {
-    withdrawnQuantity: number,
-    retirementReason: string }) {
+    withdrawnQuantity: number;
+    retirementReason: string;
+}) {
     return fetchWithAuth(`${BASE_URL}/api/products/output-product/${id}`, {
         method: 'PUT',
         body: JSON.stringify(payload),

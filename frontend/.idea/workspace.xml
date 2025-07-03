@@ -5,12 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a2045705-908b-43b7-b6db-e83ac99812e5" name="Changes" comment="add: restructure all orders module">
-      <change beforePath="$PROJECT_DIR$/../.github/workflows/main.yml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/404/page.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/inventario/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/inventario/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/AddProductModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/AddProductModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/DeleteProductModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/DeleteProductModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/context/AuthContext.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/context/AuthContext.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/api.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/fetchWithAuth.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/fetchWithAuth.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
