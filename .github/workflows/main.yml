@@ -1,0 +1,31 @@
+name: Deploy Spring Boot backend to Heroku from subfolder
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to Heroku
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Build backend with Maven
+        working-directory: ./backend
+        run: mvn clean package --no-transfer-progress -DskipTests
+
+      - name: Deploy to Heroku via Git Subfolder Push
+        run: |
+          cd backend
+          git init
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          heroku_git="https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git"
+          git remote add heroku "$heroku_git"
+          git add .
+          git commit -m "Deploy from GitHub Actions"
+          git push -f heroku master
