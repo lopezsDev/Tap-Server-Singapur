@@ -13,7 +13,8 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:3000", "http://192.168.0.17:3000") // Dirección del frontend
+                        .allowedOrigins("http://localhost:3000",
+                                "https://tap-server-singapur-3f3s40f9y-samir-lopezs-projects.vercel.app") // Dirección del frontend
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("*")
                         .allowCredentials(true);
