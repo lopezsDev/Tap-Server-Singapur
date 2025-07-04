@@ -70,7 +70,7 @@ public class OrderController {
     })
     @PreAuthorize("hasRole('ADMIN') or hasRole('WAITER')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResp<Void>> eliminar(@PathVariable Long id) {
+    public ResponseEntity<ApiResp<Void>> delete(@PathVariable Long id) {
         pedidoService.delete(id);
         return ResponseEntity.ok(ApiResp.success("Pedido eliminado", null));
     }

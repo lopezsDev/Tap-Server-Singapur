@@ -18,6 +18,7 @@ public class OrderMapper {
                 .collect(Collectors.toList());
 
         return new OrderResponseDTO(
+                order.getId(),
                 order.getObservaciones(),
                 order.getFechaPedido(),
                 productos
