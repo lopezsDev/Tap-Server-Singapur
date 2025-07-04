@@ -6,6 +6,13 @@ export function fetchProducts(page = 0, size = 15) {
     return fetchWithAuth(`${BASE_URL}/api/products?page=${page}&size=${size}`);
 }
 
+export function searchProductsByName(name: string) {
+    return fetchWithAuth(
+        `${BASE_URL}/api/products/search/${encodeURIComponent(name)}`
+    );
+}
+
+
 export function searchProducts(name: string, page = 0, size = 5) {
     return fetchWithAuth(
         `${BASE_URL}/api/products/search/by-name`,

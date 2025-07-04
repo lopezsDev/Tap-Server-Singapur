@@ -46,7 +46,7 @@ export default function OrderHistoryList({ orders, onDelete }: Props) {
                     : 'Sin fecha'}
               </span>
                             <Link
-                                href={`/ventas/historial/${order.id}`}
+                                href={`/pedidos/historial/${order.id}`}
                                 className="text-purple-400 text-sm hover:underline"
                             >
                                 Ver detalle

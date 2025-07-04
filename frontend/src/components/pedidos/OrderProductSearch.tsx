@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
-import { searchProducts } from '@/lib/api';
+import { searchProductsByName } from '@/lib/api';
 
 interface Product {
     id: number;
@@ -24,15 +24,17 @@ export default function OrderProductSearch({ onAdd }: Props) {
         const delay = setTimeout(async () => {
             if (!query.trim()) {
                 setResults([]);
+                setShowResults(false);
                 return;
             }
 
             try {
-                const res = await searchProducts(query.trim());
+                const res = await searchProductsByName(query.trim());
                 setResults(res.data);
                 setShowResults(true);
             } catch {
                 setResults([]);
+                setShowResults(false);
             }
         }, 300);
 
