@@ -21,12 +21,6 @@ export function Sidebar() {
                     >
                         <ShoppingCart className="w-5 h-5" /> Ventas
                     </Link>
-                    <Link
-                        href="/ayuda"
-                        className="flex items-center gap-2 p-2 rounded-full hover:bg-[#3a2a55] text-white"
-                    >
-                        <MessageCircleQuestion className="w-5 h-5" /> Ayuda
-                    </Link>
                 </nav>
             </div>
             <Link
