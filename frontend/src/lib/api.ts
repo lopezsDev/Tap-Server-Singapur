@@ -95,3 +95,41 @@ export function fetchOrders() {
 export function fetchOrderById(id: number) {
     return fetchWithAuth(`${BASE_URL}/api/order/${id}`);
 }
+
+export function fetchCategories() {
+    return fetchWithAuth(`${BASE_URL}/api/categories`);
+}
+
+export function fetchCategoryById(id: number) {
+    return fetchWithAuth(`${BASE_URL}/api/categories/${id}`);
+}
+
+export function createCategory(data: {
+    name: string;
+    description: string;
+    unitOfMeasure: 'ML' | 'OZ' | 'L' | 'TAZA' | 'KG' | 'G';
+}) {
+    return fetchWithAuth(`${BASE_URL}/api/categories`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+    });
+}
+
+
+export function updateCategory(id: number, data: {
+    name: string;
+    description: string;
+    unitOfMeasure: 'ML' | 'L' | 'KG' | 'UND';
+}) {
+    return fetchWithAuth(`${BASE_URL}/api/categories/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+    });
+}
+
+export function deleteCategory(id: number) {
+    return fetchWithAuth(`${BASE_URL}/api/categories/${id}`, {
+        method: 'DELETE',
+    });
+}
+

@@ -9,6 +9,7 @@ import OutputProductModal from '@/components/inventario/OutputProductModal';
 import InventoryActions from '@/components/inventario/InventoryActions';
 import Pagination from '@/components/inventario/Pagination';
 import AddProductModal from '@/components/inventario/AddProductModal';
+import ManageCategoriesModal from "@/components/inventario/ManageCategoriesModal";
 
 export default function InventoryPage() {
     const {
@@ -28,6 +29,8 @@ export default function InventoryPage() {
     const [productToDelete, setProductToDelete] = useState(null);
     const [productToWithdraw, setProductToWithdraw] = useState(null);
     const [showAddModal, setShowAddModal] = useState(false);
+    const [showCategoriesModal, setShowCategoriesModal] = useState(false);
+
 
     const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newSize = Number(e.target.value);
@@ -42,12 +45,19 @@ export default function InventoryPage() {
             {error && <p className="text-red-500 mb-4">{error}</p>}
             {loading && <p className="text-gray-400">Cargando productos...</p>}
 
+            {showCategoriesModal && (
+                <ManageCategoriesModal
+                    onClose={() => setShowCategoriesModal(false)}
+                />
+            )}
+
             {!loading && (
                 <>
                     <InventoryActions
                         search={search}
                         setSearch={setSearch}
                         onAdd={() => setShowAddModal(true)}
+                        onManageCategories={() => setShowCategoriesModal(true)}
                     />
 
                     <div className="mb-4">

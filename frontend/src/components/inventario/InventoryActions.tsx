@@ -1,22 +1,29 @@
 'use client';
 
-import { PlusCircle, Search } from 'lucide-react';
+import { PlusCircle, Search, Layers } from 'lucide-react';
 
 interface Props {
     search: string;
     setSearch: (value: string) => void;
     onAdd: () => void;
+    onManageCategories: () => void;
 }
 
-export default function InventoryActions({ search, setSearch, onAdd }: Props) {
+export default function InventoryActions({ search, setSearch, onAdd, onManageCategories }: Props) {
     return (
         <>
-            <div className="flex items-center gap-4 mb-6">
+            <div className="flex items-center justify-between mb-6">
                 <button
                     onClick={onAdd}
                     className="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full text-white flex items-center gap-2"
                 >
                     <PlusCircle className="w-5 h-5" /> Añadir producto
+                </button>
+                <button
+                    onClick={onManageCategories}
+                    className="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-full text-white flex items-center gap-2"
+                >
+                    <Layers className="w-5 h-5" /> Gestionar categorías
                 </button>
             </div>
 
