@@ -30,4 +30,11 @@ public class AuthController {
         SignupResponseDTO response = authService.signup(signupRequest);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/check")
+    public ResponseEntity<?> check(@RequestParam String token) {
+        return ResponseEntity.ok().build();
+    }
+
+
 }

@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,8 +39,12 @@ public class ProductController {
     })
     @PreAuthorize("hasAuthority('PERMISSION_READ')")
     @GetMapping
-    public ResponseEntity<ApiResp<List<ProductResponseDTO>>> getAllProducts() {
-        return ResponseEntity.ok(ApiResp.success("Productos encontrados", productService.findAll()));
+    public ResponseEntity<ApiResp<Page<ProductResponseDTO>>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size
+    ) {
+        return ResponseEntity.ok(ApiResp.success("Productos encontrados",
+                productService.findAll(PageRequest.of(page, size))));
     }
 
     @Operation(summary = "Get product by ID", description = "Retrieve a product by its ID.")

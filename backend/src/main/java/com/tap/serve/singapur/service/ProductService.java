@@ -1,7 +1,6 @@
 package com.tap.serve.singapur.service;
 
 import com.tap.serve.singapur.dto.ProductRequestDTO;
-import com.tap.serve.singapur.utils.ApiResp;
 import com.tap.serve.singapur.dto.ProductResponseDTO;
 import com.tap.serve.singapur.dto.ProductOutputRequestDTO;
 import com.tap.serve.singapur.mapper.ProductMapper;
@@ -12,11 +11,10 @@ import com.tap.serve.singapur.repository.ProductRepository;
 import com.tap.serve.singapur.utils.exception.CategoryNotFoundException;
 import com.tap.serve.singapur.utils.exception.InsufficientInventoryException;
 import com.tap.serve.singapur.utils.exception.ProductNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,11 +30,9 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
-    public List<ProductResponseDTO> findAll() {
-        return productRepository.findAll()
-                .stream()
-                .map(productMapper::toDTO)
-                .toList();
+    public Page<ProductResponseDTO> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable)
+                .map(productMapper::toDTO);
     }
 
     public ProductResponseDTO findById(long id) {
