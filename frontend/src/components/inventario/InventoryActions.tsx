@@ -1,6 +1,6 @@
 'use client';
 
-import { PlusCircle, Search, Filter } from 'lucide-react';
+import { PlusCircle, Search } from 'lucide-react';
 
 interface Props {
     search: string;
@@ -31,9 +31,6 @@ export default function InventoryActions({ search, setSearch, onAdd }: Props) {
                         className="bg-transparent outline-none text-white ml-2 w-full"
                     />
                 </div>
-                <button className="bg-[#2a1b3d] p-2 rounded-lg">
-                    <Filter className="w-5 h-5 text-purple-300" />
-                </button>
             </div>
         </>
     );
