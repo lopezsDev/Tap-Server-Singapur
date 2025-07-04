@@ -6,8 +6,17 @@ export function fetchProducts(page = 0, size = 15) {
     return fetchWithAuth(`${BASE_URL}/api/products?page=${page}&size=${size}`);
 }
 
-export function searchProducts(name: string) {
-    return fetchWithAuth(`${BASE_URL}/api/products/search?name=${encodeURIComponent(name)}`);
+export function searchProducts(name: string, page = 0, size = 5) {
+    return fetchWithAuth(
+        `${BASE_URL}/api/products/search/by-name`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, page, size })
+        }
+    );
 }
 
 export function deleteProduct(id: number) {

@@ -10,7 +10,7 @@ export function useProducts() {
     const [error, setError] = useState<string | null>(null);
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(true);
-    const [pageSize, setPageSize] = useState(15); // valor por defecto
+    const [pageSize, setPageSize] = useState(15);
 
     const loadProducts = async (page = 1, size = pageSize) => {
         setLoading(true);
@@ -20,7 +20,6 @@ export function useProducts() {
             setTotalPages(res.data?.totalPages ?? 1);
             setCurrentPage(page);
             setError(null);
-            setPageSize(size);
         } catch {
             setProducts([]);
             setTotalPages(1);
@@ -30,15 +29,14 @@ export function useProducts() {
         }
     };
 
-    const loadSearchResults = async (query: string, size = pageSize) => {
+    const loadSearchResults = async (query: string, page = 1, size = pageSize) => {
         setLoading(true);
         try {
-            const res = await searchProducts(query);
+            const res = await searchProducts(query, page - 1, size);
             setProducts(res.data?.content ?? []);
             setTotalPages(res.data?.totalPages ?? 1);
-            setCurrentPage(1);
+            setCurrentPage(page);
             setError(null);
-            setPageSize(size);
         } catch {
             setProducts([]);
             setTotalPages(1);
@@ -48,13 +46,17 @@ export function useProducts() {
         }
     };
 
+    const loadPage = (page: number, size = pageSize) => {
+        if (!search.trim()) {
+            loadProducts(page, size);
+        } else {
+            loadSearchResults(search.trim(), page, size);
+        }
+    };
+
     useEffect(() => {
         const delay = setTimeout(() => {
-            if (!search.trim()) {
-                loadProducts(1, pageSize);
-            } else {
-                loadSearchResults(search.trim(), pageSize);
-            }
+            loadPage(1);
         }, 400);
 
         return () => clearTimeout(delay);
@@ -71,7 +73,7 @@ export function useProducts() {
         error,
         search,
         setSearch,
-        loadProducts,
+        loadProducts: loadPage,
         loading,
         pageSize,
         setPageSize,
