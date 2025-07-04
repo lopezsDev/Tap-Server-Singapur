@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { withdrawProduct } from '@/lib/api';
-import Modal from './Modal';
+import Modal from '../Modal';
 
 interface Product {
     id: number;

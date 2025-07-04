@@ -31,9 +31,35 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        setIsAuthenticated(!!token);
+        const validateToken = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                setIsAuthenticated(false);
+                return;
+            }
+
+            try {
+                const res = await fetch(`${BASE_URL}/api/auth/check`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (res.ok) {
+                    setIsAuthenticated(true);
+                } else {
+                    logout();
+                    setIsAuthenticated(false);
+                }
+            } catch (err) {
+                console.error('Error validando token:', err);
+                logout();
+                setIsAuthenticated(false);
+            }
+        };
+        validateToken();
     }, []);
+
 
     const login = async ({ username, password }: LoginCredentials) => {
         try {

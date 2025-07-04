@@ -2,8 +2,8 @@ import { fetchWithAuth } from './fetchWithAuth';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
 
-export function fetchProducts() {
-    return fetchWithAuth(`${BASE_URL}/api/products`);
+export function fetchProducts(page = 0, size = 15) {
+    return fetchWithAuth(`${BASE_URL}/api/products?page=${page}&size=${size}`);
 }
 
 export function searchProducts(name: string) {

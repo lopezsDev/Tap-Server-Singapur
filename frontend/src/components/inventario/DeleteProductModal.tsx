@@ -1,7 +1,7 @@
 'use client';
 
 import { deleteProduct } from '@/lib/api';
-import Modal from './Modal';
+import Modal from '../Modal';
 
 interface Props {
     productId: number;
