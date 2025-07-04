@@ -16,6 +16,8 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -109,10 +111,17 @@ public class ProductController {
                 productService.outProduct(id, productOutDTO)));
     }
 
+
     @PreAuthorize("hasAuthority('PERMISSION_READ')")
-    @GetMapping("/search")
-    public ResponseEntity<ApiResp<List<ProductResponseDTO>>> search(@Valid @ModelAttribute ProductSearchDTO searchDTO) {
-        List<ProductResponseDTO> results = productService.findByName(searchDTO.name());
-        return ResponseEntity.ok(ApiResp.success("Resultados", results));
+    @PostMapping("/search/by-name")
+    public ResponseEntity<ApiResp<Page<ProductResponseDTO>>> search(@Valid @RequestBody ProductSearchDTO searchDTO) {
+        Page<ProductResponseDTO> results = productService.findByName(
+                searchDTO.name(),
+                searchDTO.pageOrDefault(),
+                searchDTO.sizeOrDefault()
+        );
+
+        return ResponseEntity.ok(ApiResp.success("Resultados paginados", results));
     }
+
 }

@@ -12,6 +12,7 @@ import com.tap.serve.singapur.utils.exception.CategoryNotFoundException;
 import com.tap.serve.singapur.utils.exception.InsufficientInventoryException;
 import com.tap.serve.singapur.utils.exception.ProductNotFoundException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,11 +47,11 @@ public class ProductService {
     public ProductResponseDTO create(ProductRequestDTO productDTO) {
 
         CategoryModel category = categoryRepository.findByName(productDTO.category())
-                .orElseThrow(() -> new CategoryNotFoundException("Categoría "+ productDTO.category() +" no encontrada"));
+                .orElseThrow(() -> new CategoryNotFoundException("Categoría " + productDTO.category() + " no encontrada"));
 
         ProductModel model = productMapper.toModel(productDTO);
-                model.setCategory(category);
-                return productMapper.toDTO(productRepository.save(model));
+        model.setCategory(category);
+        return productMapper.toDTO(productRepository.save(model));
     }
 
     public ProductResponseDTO update(long id, ProductRequestDTO productDTO) {
@@ -58,7 +59,7 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException("Producto con ID " + id + " no encontrado"));
 
         CategoryModel category = categoryRepository.findByName(productDTO.category())
-                .orElseThrow(()-> new CategoryNotFoundException("Categoría "+ productDTO.category() +" no encontrado"));
+                .orElseThrow(() -> new CategoryNotFoundException("Categoría " + productDTO.category() + " no encontrado"));
 
         productMapper.updateModelFromDTO(productDTO, existing);
         existing.setCategory(category);
@@ -75,31 +76,30 @@ public class ProductService {
 
     public ProductResponseDTO outProduct(long id, ProductOutputRequestDTO productOutDTO) {
 
-            ProductModel product = productRepository.findById(id)
-                    .orElseThrow(() -> new ProductNotFoundException("Producto con id: " + id + " no encontrado"));
+        ProductModel product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Producto con id: " + id + " no encontrado"));
 
-            if (product.getAvailableQuantity() < productOutDTO.withdrawnQuantity()) {
-                throw new InsufficientInventoryException("No hay suficiente inventario disponible. Cantidad actual: "
-                        + product.getAvailableQuantity());
-            }
+        if (product.getAvailableQuantity() < productOutDTO.withdrawnQuantity()) {
+            throw new InsufficientInventoryException("No hay suficiente inventario disponible. Cantidad actual: "
+                    + product.getAvailableQuantity());
+        }
 
-            product.setWithdrawnQuantity(productOutDTO.withdrawnQuantity());
-            product.setRetirementReason(productOutDTO.retirementReason());
-            product.setAvailableQuantity(product.getAvailableQuantity() - productOutDTO.withdrawnQuantity());
+        product.setWithdrawnQuantity(productOutDTO.withdrawnQuantity());
+        product.setRetirementReason(productOutDTO.retirementReason());
+        product.setAvailableQuantity(product.getAvailableQuantity() - productOutDTO.withdrawnQuantity());
 
-            return productMapper.toDTO(productRepository.save(product));
+        return productMapper.toDTO(productRepository.save(product));
 
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponseDTO> findByName(String name) {
+    public Page<ProductResponseDTO> findByName(String name, int page, int size) {
         String sanitized = name.trim().toLowerCase();
-        if (sanitized.isEmpty()) return List.of();
+        if (sanitized.isEmpty()) return Page.empty();
 
-        List<ProductModel> products = productRepository.findByNameContainingIgnoreCase(sanitized);
-        return products.stream()
-                .map(productMapper::toDTO)
-                .toList();
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductModel> productsPage = productRepository.findByNameContainingIgnoreCase(sanitized, pageable);
+        return productsPage.map(productMapper::toDTO);
     }
 }
 
