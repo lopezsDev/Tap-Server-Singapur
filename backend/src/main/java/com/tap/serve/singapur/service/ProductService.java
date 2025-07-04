@@ -44,6 +44,14 @@ public class ProductService {
 
     }
 
+    public List<ProductResponseDTO> searchByName(String name) {
+        List<ProductModel> products = productRepository.findByNameContainingIgnoreCase(name);
+        return products.stream()
+                .map(productMapper::toDTO)
+                .toList();
+    }
+
+
     public ProductResponseDTO create(ProductRequestDTO productDTO) {
 
         CategoryModel category = categoryRepository.findByName(productDTO.category())

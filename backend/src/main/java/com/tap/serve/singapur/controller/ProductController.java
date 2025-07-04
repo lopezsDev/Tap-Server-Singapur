@@ -61,6 +61,14 @@ public class ProductController {
         return ResponseEntity.ok(ApiResp.success("Producto encontrado", productService.findById(id)));
     }
 
+    @PreAuthorize("hasAuthority('PERMISSION_READ')")
+    @GetMapping("/search/{name}")
+    public ResponseEntity<ApiResp<List<ProductResponseDTO>>> searchProductsByName(@PathVariable String name) {
+        List<ProductResponseDTO> products = productService.searchByName(name);
+        return ResponseEntity.ok(ApiResp.success("Productos encontrados", products));
+    }
+
+
     @Operation(summary = "Create a new product", description = "Add a new product to the database.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Product created",
