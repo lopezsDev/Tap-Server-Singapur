@@ -14,7 +14,7 @@ interface Product {
 interface Order {
     id: number;
     observations: string;
-    orderDate: string;
+    OrderDate: string;
     products: Product[];
 }
 
@@ -41,12 +41,12 @@ export default function OrderHistoryList({ orders, onDelete }: Props) {
                         </h3>
                         <div className="flex gap-4 items-center">
               <span className="text-sm text-purple-300">
-                {order.orderDate
-                    ? format(new Date(order.orderDate), 'dd/MM/yyyy HH:mm')
+                {order.OrderDate
+                    ? format(new Date(order.OrderDate), 'dd/MM/yyyy HH:mm')
                     : 'Sin fecha'}
               </span>
                             <Link
-                                href={`/pedidos/historial/${order.id}`}
+                                href={`/ventas/historial/${order.id}`}
                                 className="text-purple-400 text-sm hover:underline"
                             >
                                 Ver detalle

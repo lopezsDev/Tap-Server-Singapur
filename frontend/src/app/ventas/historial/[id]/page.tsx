@@ -14,7 +14,7 @@ interface Product {
 
 interface Order {
     observations: string;
-    orderDate: string;
+    OrderDate: string;
     products: Product[];
 }
 
@@ -48,8 +48,8 @@ export default function OrderDetailPage() {
             <h1 className="text-2xl font-bold mb-4">Detalle del Pedido #{id}</h1>
 
             <p className="text-sm text-purple-300 mb-2">
-                {order.orderDate
-                    ? format(new Date(order.orderDate), 'dd/MM/yyyy HH:mm')
+                {order.OrderDate
+                    ? format(new Date(order.OrderDate), 'dd/MM/yyyy HH:mm')
                     : 'Sin fecha'}
             </p>
 
