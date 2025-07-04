@@ -16,12 +16,14 @@ interface Props {
 }
 
 export default function OrderProductTable({ products, onChangeQuantity }: Props) {
+    const total = products.reduce((acc, p) => acc + p.price * p.quantity, 0);
     return (
         <div className="border border-[#3a2b4f] mt-6 rounded-lg overflow-hidden">
             <div className="grid grid-cols-3 bg-[#2a1b3d] p-4 font-semibold">
                 <span>Producto</span>
                 <span className="text-center">Cantidad</span>
                 <span className="text-right">Subtotal</span>
+
             </div>
 
             {products.map((product) => (
@@ -54,6 +56,13 @@ export default function OrderProductTable({ products, onChangeQuantity }: Props)
                     </div>
                 </div>
             ))}
+            <div className="grid grid-cols-3 items-center p-4 border-t border-[#3a2b4f] bg-[#1c1326] font-semibold text-lg">
+                <span >Total</span>
+                <span className="text-center"></span>
+                <div className="text-right text-green-400">
+                    ₡{total.toLocaleString()}
+                </div>
+            </div>
         </div>
     );
 }
