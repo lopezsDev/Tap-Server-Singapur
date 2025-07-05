@@ -1,12 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from '../Modal';
-import { createProduct } from '@/lib/api';
+import { createProduct, fetchCategories } from '@/lib/api';
 
 interface Props {
     onClose: () => void;
     onSuccess: () => void;
+}
+
+interface Category {
+    id: number;
+    name: string;
 }
 
 export default function AddProductModal({ onClose, onSuccess }: Props) {
@@ -21,6 +26,9 @@ export default function AddProductModal({ onClose, onSuccess }: Props) {
     });
 
     const [error, setError] = useState('');
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [loadingCategories, setLoadingCategories] = useState(true);
+    const [categoriesError, setCategoriesError] = useState<string | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -42,6 +50,7 @@ export default function AddProductModal({ onClose, onSuccess }: Props) {
                 price: Number(form.price),
                 criticalQuantity: Number(form.criticalQuantity),
                 availableQuantity: Number(form.availableQuantity),
+                categoryId: Number(form.category), // Enviar solo el ID
             };
             await createProduct(payload);
             onSuccess();
@@ -50,6 +59,21 @@ export default function AddProductModal({ onClose, onSuccess }: Props) {
             setError('Error al crear el producto');
         }
     };
+
+    const loadCategories = async () => {
+        try {
+            const res = await fetchCategories();
+            setCategories(res.data);
+        } catch {
+            setCategoriesError('Error al cargar categorías');
+        } finally {
+            setLoadingCategories(false);
+        }
+    };
+
+    useEffect(() => {
+        loadCategories();
+    }, []);
 
     return (
         <Modal title="Nuevo Producto" onClose={onClose}>
@@ -78,15 +102,27 @@ export default function AddProductModal({ onClose, onSuccess }: Props) {
                         <label htmlFor="category" className="mb-1 text-sm font-semibold text-gray-300">
                             Categoría
                         </label>
-                        <input
-                            id="category"
-                            name="category"
-                            placeholder="Categoría"
-                            value={form.category}
-                            onChange={handleChange}
-                            className="input"
-                            required
-                        />
+                        {loadingCategories ? (
+                            <p className="text-gray-400">Cargando categorías...</p>
+                        ) : categoriesError ? (
+                            <p className="text-red-500">{categoriesError}</p>
+                        ) : (
+                            <select
+                                id="category"
+                                name="category"
+                                value={form.category}
+                                onChange={handleChange}
+                                className="input"
+                                required
+                            >
+                                <option value="">Categoría</option>
+                                {categories.map((cat) => (
+                                    <option key={cat.id} value={cat.id}>
+                                        {cat.name}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
                     </div>
                 </div>
 
