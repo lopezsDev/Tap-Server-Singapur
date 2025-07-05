@@ -10,6 +10,7 @@ import com.tap.serve.singapur.model.OrderModel;
 import com.tap.serve.singapur.model.ProductModel;
 import com.tap.serve.singapur.repository.OrderRepository;
 import com.tap.serve.singapur.repository.ProductRepository;
+import com.tap.serve.singapur.utils.exception.InsufficientInventoryException;
 import com.tap.serve.singapur.utils.exception.OrderNotFoundException;
 import com.tap.serve.singapur.utils.exception.ProductNotFoundException;
 import jakarta.transaction.Transactional;
@@ -41,6 +42,12 @@ public class OrderService {
         for (OrderItemRequestDTO item : dto.products()){
             ProductModel product = productRepository.findById(item.productId())
                     .orElseThrow(()-> new ProductNotFoundException("Producto con el ID "+ item.productId() + " no encontrado"));
+
+            if (product.getAvailableQuantity() < item.quantity()) {
+                throw new InsufficientInventoryException("No hay suficiente cantidad disponible para el producto: " + product.getName());
+            }
+
+            product.setAvailableQuantity(product.getAvailableQuantity() - item.quantity());
 
             OrderDetailModel detail = new OrderDetailModel();
             detail.setProduct(product);
