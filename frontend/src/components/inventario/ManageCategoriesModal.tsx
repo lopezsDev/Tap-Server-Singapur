@@ -1,16 +1,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { fetchCategories, deleteCategory } from '@/lib/api';
+import { fetchCategories } from '@/lib/api';
 import Modal from '@/components/Modal';
 import { Pencil, Trash2, PlusCircle } from 'lucide-react';
 import AddCategoryModal from "@/components/inventario/AddCategoryModal";
+import EditCategoryModal from "@/components/inventario/EditCategoryModal";
+import DeleteCategoryModal from "@/components/inventario/DeleteCategoryModal";
 
 interface Category {
     id: number;
     name: string;
     description: string;
-    unitMeasure: string;
+    unitMeasure: 'ML' | 'OZ' | 'L' | 'TAZA' | 'KG' | 'G';
 }
 
 interface Props {
@@ -22,7 +24,8 @@ export default function ManageCategoriesModal({ onClose }: Props) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [showAddModal, setShowAddModal] = useState(false);
-
+    const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+    const [deletingCategory, setDeletingCategory] = useState<Category | null>(null);
 
     const loadCategories = async () => {
         try {
@@ -33,17 +36,6 @@ export default function ManageCategoriesModal({ onClose }: Props) {
             setError('Error al cargar las categorías');
         } finally {
             setLoading(false);
-        }
-    };
-
-    const handleDelete = async (id: number) => {
-        if (!confirm(`¿Eliminar la categoría #${id}?`)) return;
-
-        try {
-            await deleteCategory(id);
-            loadCategories();
-        } catch {
-            alert('Error al eliminar la categoría');
         }
     };
 
@@ -89,15 +81,13 @@ export default function ManageCategoriesModal({ onClose }: Props) {
                                     <td className="px-2 py-1 text-right flex gap-2 justify-end">
                                         <button
                                             className="text-yellow-400 hover:text-yellow-500"
-                                            onClick={() =>
-                                                alert(`Abrir modal para editar categoría #${cat.id}`)
-                                            }
+                                            onClick={() => setEditingCategory(cat)}
                                         >
                                             <Pencil className="w-5 h-5" />
                                         </button>
                                         <button
                                             className="text-red-500 hover:text-red-600"
-                                            onClick={() => handleDelete(cat.id)}
+                                            onClick={() => setDeletingCategory(cat)}
                                         >
                                             <Trash2 className="w-5 h-5" />
                                         </button>
@@ -109,9 +99,27 @@ export default function ManageCategoriesModal({ onClose }: Props) {
                     </div>
                 )}
             </div>
+
             {showAddModal && (
                 <AddCategoryModal
                     onClose={() => setShowAddModal(false)}
+                    onSuccess={loadCategories}
+                />
+            )}
+
+            {editingCategory && (
+                <EditCategoryModal
+                    category={editingCategory}
+                    onClose={() => setEditingCategory(null)}
+                    onSuccess={loadCategories}
+                />
+            )}
+
+            {deletingCategory && (
+                <DeleteCategoryModal
+                    categoryId={deletingCategory.id}
+                    categoryName={deletingCategory.name}
+                    onClose={() => setDeletingCategory(null)}
                     onSuccess={loadCategories}
                 />
             )}

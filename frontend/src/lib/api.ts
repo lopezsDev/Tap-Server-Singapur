@@ -116,11 +116,14 @@ export function createCategory(data: {
 }
 
 
-export function updateCategory(id: number, data: {
-    name: string;
-    description: string;
-    unitOfMeasure: 'ML' | 'L' | 'KG' | 'UND';
-}) {
+export function updateCategory(
+    id: number,
+    data: {
+        name: string;
+        description: string;
+        unitOfMeasure: 'ML' | 'OZ' | 'L' | 'TAZA' | 'KG' | 'G';
+    }
+) {
     return fetchWithAuth(`${BASE_URL}/api/categories/${id}`, {
         method: 'PUT',
         body: JSON.stringify(data),
