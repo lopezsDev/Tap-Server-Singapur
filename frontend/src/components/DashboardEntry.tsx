@@ -11,16 +11,16 @@ export default function DashboardEntry() {
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-8">
-                <a href="/inventario" className="bg-[#2a1b3d] p-6 rounded-lg flex flex-col items-center hover:bg-[#3a2b4d] transition">
+                <div className="bg-[#2a1b3d] p-6 rounded-lg flex flex-col items-center transition">
                     <Beer className="w-10 h-10 text-purple-400 mb-4" />
                     <h3 className="text-xl font-semibold">Inventario</h3>
                     <p className="text-sm text-zinc-400 mt-2">Revisa, edita y controla el stock de productos.</p>
-                </a>
-                <a href="/ventas" className="bg-[#2a1b3d] p-6 rounded-lg flex flex-col items-center hover:bg-[#3a2b4d] transition">
+                </div>
+                <div className="bg-[#2a1b3d] p-6 rounded-lg flex flex-col items-center transition">
                     <Utensils className="w-10 h-10 text-purple-400 mb-4" />
                     <h3 className="text-xl font-semibold">Ventas</h3>
                     <p className="text-sm text-zinc-400 mt-2">Registra ventas fácilmente y mantén el control.</p>
-                </a>
+                </div>
             </div>
         </section>
     );
