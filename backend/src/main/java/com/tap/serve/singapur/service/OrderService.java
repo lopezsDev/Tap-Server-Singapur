@@ -80,10 +80,23 @@ public class OrderService {
         return orderMapper.toDto(order);
     }
 
+    @Transactional
     public void delete(Long id) {
-        if (!orderRepository.existsById(id)) {
-            throw new OrderNotFoundException("Pedido "+ id + " no encontrado");
+        OrderModel order = orderRepository.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException("Pedido " + id + " no encontrado"));
+
+        for (OrderDetailModel detail : order.getDetails()) {
+            ProductModel product = detail.getProduct();
+
+            product.setAvailableQuantity(product.getAvailableQuantity() + detail.getQuantity());
+
+            int newWithdrawn = product.getWithdrawnQuantity() - detail.getQuantity();
+            product.setWithdrawnQuantity(Math.max(0, newWithdrawn));
+
+            productRepository.save(product);
         }
-        orderRepository.deleteById(id);
+
+        orderRepository.delete(order);
     }
+
 }
